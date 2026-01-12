@@ -1,0 +1,178 @@
+{
+  "name": "Chat Dashboard Integration Example",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "chat-webhook"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "userId",
+              "value": "={{ $json.body.userId || 'user_' + $now.toFormat('x') }}"
+            },
+            {
+              "name": "userName",
+              "value": "={{ $json.body.userName || 'Visitante' }}"
+            },
+            {
+              "name": "userMessage",
+              "value": "={{ $json.body.message }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-data",
+      "name": "Extract Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:3001/api/webhook/message",
+        "authentication": "none",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"userId\": \"{{ $json.userId }}\",\n  \"userName\": \"{{ $json.userName }}\",\n  \"message\": \"{{ $json.userMessage }}\",\n  \"isBot\": false,\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}"
+      },
+      "id": "send-user-message",
+      "name": "Send User Message to Dashboard",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Você é um assistente prestativo e amigável."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.userMessage }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ai-agent",
+      "name": "AI Agent (OpenAI)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:3001/api/webhook/message",
+        "authentication": "none",
+        "requestMethod": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={\n  \"userId\": \"{{ $('Extract Data').item.json.userId }}\",\n  \"userName\": \"{{ $('Extract Data').item.json.userName }}\",\n  \"message\": \"{{ $json.message || $json.output || $json.text }}\",\n  \"isBot\": true,\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}"
+      },
+      "id": "send-bot-response",
+      "name": "Send Bot Response to Dashboard",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"response\": \"{{ $('AI Agent (OpenAI)').item.json.message }}\",\n  \"userId\": \"{{ $('Extract Data').item.json.userId }}\"\n}"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Data": {
+      "main": [
+        [
+          {
+            "node": "Send User Message to Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send User Message to Dashboard": {
+      "main": [
+        [
+          {
+            "node": "AI Agent (OpenAI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent (OpenAI)": {
+      "main": [
+        [
+          {
+            "node": "Send Bot Response to Dashboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Bot Response to Dashboard": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-12T00:00:00.000Z",
+  "versionId": "1"
+}
