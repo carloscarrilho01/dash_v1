@@ -154,7 +154,6 @@ function ChatWindow({ conversation, onSendMessage }) {
       </div>
 
       <div className="chat-input">
-        <FileUploader onSendFile={handleSendFile} />
         <form onSubmit={handleSubmit} className="input-container">
           <button type="button" className="icon-button">
             <svg viewBox="0 0 24 24" width="24" height="24">
