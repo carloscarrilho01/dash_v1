@@ -313,8 +313,11 @@ io.on('connection', async (socket) => {
 
 // Serve static files DEPOIS das rotas de API (production)
 if (process.env.NODE_ENV === 'production') {
-  // Serve arquivos estáticos (CSS, JS, imagens, etc)
-  app.use(express.static(path.join(__dirname, '../dist')));
+  // Serve arquivos estáticos (CSS, JS, imagens, etc) com cache curto
+  app.use(express.static(path.join(__dirname, '../dist'), {
+    maxAge: '1h', // Cache de 1 hora
+    etag: true
+  }));
 
   // Serve index.html apenas para rotas GET que NÃO são de API (SPA routing)
   app.get('*', (req, res, next) => {
@@ -322,6 +325,11 @@ if (process.env.NODE_ENV === 'production') {
     if (req.path.startsWith('/api/')) {
       return next(); // Passa para o próximo handler (404)
     }
+
+    // Sem cache para o index.html (força reload)
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
     res.sendFile(path.join(__dirname, '../dist/index.html'));
   });
 }
