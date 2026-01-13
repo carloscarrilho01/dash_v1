@@ -313,8 +313,12 @@ if (process.env.NODE_ENV === 'production') {
   // Serve arquivos estáticos (CSS, JS, imagens, etc)
   app.use(express.static(path.join(__dirname, '../dist')));
 
-  // Serve index.html para todas as outras rotas (SPA routing)
-  app.get('*', (req, res) => {
+  // Serve index.html apenas para rotas GET que NÃO são de API (SPA routing)
+  app.get('*', (req, res, next) => {
+    // Se começar com /api/, não serve o index.html
+    if (req.path.startsWith('/api/')) {
+      return next(); // Passa para o próximo handler (404)
+    }
     res.sendFile(path.join(__dirname, '../dist/index.html'));
   });
 }
