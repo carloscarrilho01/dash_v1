@@ -238,14 +238,14 @@
 .lead-observacoes {
   display: flex;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
   font-size: 13px;
   color: var(--text-secondary);
   margin-top: 6px;
 }
 
 .lead-observacoes {
-  padding: 8px;
+  padding: 8px 8px 8px 10px;
   background: var(--bg-hover);
   border-radius: 6px;
   border-left: 3px solid var(--accent-primary);
@@ -253,18 +253,20 @@
   line-height: 1.4;
   max-height: 60px;
   overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  word-wrap: break-word;
 }
 
 .lead-phone svg,
-.lead-email svg,
-.lead-observacoes svg {
+.lead-email svg {
   flex-shrink: 0;
   opacity: 0.7;
   margin-top: 2px;
+}
+
+.lead-observacoes svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+  margin-top: 1px;
 }
 
 .kanban-loading {
