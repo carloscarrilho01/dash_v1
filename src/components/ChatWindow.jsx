@@ -5,6 +5,7 @@ import AudioRecorder from './AudioRecorder'
 import FileUploader from './FileUploader'
 import QuickMessagesBar from './QuickMessagesBar'
 import QuickMessagesManager from './QuickMessagesManager'
+import CustomAudioPlayer from './CustomAudioPlayer'
 import './ChatWindow.css'
 import './FileUploader.css'
 
@@ -110,10 +111,10 @@ function ChatWindow({ conversation, onSendMessage }) {
             >
               <div className="message-bubble">
                 {msg.type === 'audio' ? (
-                  <div className="message-audio">
-                    <audio src={msg.audioUrl || msg.text} controls className="audio-message-player" />
-                    {msg.duration && <span className="audio-duration">{Math.floor(msg.duration / 60)}:{(msg.duration % 60).toString().padStart(2, '0')}</span>}
-                  </div>
+                  <CustomAudioPlayer
+                    src={msg.audioUrl || msg.text}
+                    duration={msg.duration}
+                  />
                 ) : msg.type === 'file' ? (
                   <div className="message-file">
                     {msg.fileCategory === 'image' ? (

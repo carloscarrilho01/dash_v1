@@ -142,28 +142,202 @@
   background: rgba(224, 224, 224, 0.1);
 }
 
-/* Componente de mensagem de áudio */
+/* Componente de mensagem de áudio customizado */
 .message-audio {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-width: 250px;
+  gap: 10px;
+  min-width: 280px;
+  max-width: 100%;
+  padding: 4px;
 }
 
+/* Player de áudio nativo oculto */
 .audio-message-player {
+  display: none;
+}
+
+/* Container do player customizado */
+.custom-audio-player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Botão de play/pause */
+.audio-play-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--bg-primary);
+}
+
+.audio-play-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.05);
+}
+
+.audio-play-btn:active {
+  transform: scale(0.95);
+}
+
+.audio-play-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Informações do áudio */
+.audio-info {
   flex: 1;
-  height: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
-.audio-message-player::-webkit-media-controls-panel {
-  background: transparent;
+/* Barra de progresso */
+.audio-progress-container {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
-.message.user .audio-message-player::-webkit-media-controls-panel {
-  background: var(--bg-tertiary);
+.audio-progress-bar {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+  position: relative;
 }
 
-.message.bot .audio-message-player::-webkit-media-controls-panel,
-.message.agent .audio-message-player::-webkit-media-controls-panel {
-  background: var(--msg-agent-bg);
+.audio-progress-bar::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  background: var(--accent-primary);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.audio-progress-container:hover .audio-progress-bar::after {
+  opacity: 1;
+}
+
+/* Tempo do áudio */
+.audio-time-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+}
+
+.audio-current-time,
+.audio-total-duration {
+  font-weight: 500;
+}
+
+/* Visualizador de onda (opcional) */
+.audio-waveform {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 20px;
+  flex: 1;
+}
+
+.audio-waveform-bar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  min-width: 2px;
+  transition: all 0.2s;
+}
+
+.audio-waveform-bar.active {
+  background: var(--accent-primary);
+}
+
+/* Ícone de microfone */
+.audio-mic-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Diferentes estilos para mensagens de usuário/bot/agente */
+.message.user .audio-play-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+}
+
+.message.user .audio-play-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.message.bot .audio-play-btn,
+.message.agent .audio-play-btn {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+}
+
+.message.bot .audio-play-btn:hover,
+.message.agent .audio-play-btn:hover {
+  background: var(--accent-hover);
+}
+
+/* Animação de loading enquanto carrega */
+@keyframes audioLoading {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.audio-loading .audio-play-btn {
+  animation: audioLoading 1.5s ease-in-out infinite;
+}
+
+/* Animação das barras da waveform durante reprodução */
+@keyframes waveformPulse {
+  0%, 100% { height: 40%; }
+  50% { height: 100%; }
+}
+
+.audio-playing .audio-waveform-bar {
+  animation: waveformPulse 0.8s ease-in-out infinite;
+}
+
+.audio-playing .audio-waveform-bar:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.audio-playing .audio-waveform-bar:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.audio-playing .audio-waveform-bar:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.audio-playing .audio-waveform-bar:nth-child(5) {
+  animation-delay: 0.4s;
 }
