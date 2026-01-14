@@ -2,7 +2,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import './Sidebar.css'
 
-function Sidebar({ conversations, selectedConversation, onSelectConversation, loading, onNewConversation }) {
+function Sidebar({ conversations, selectedConversation, onSelectConversation, loading, onNewConversation, onNavigateToCRM }) {
   const formatTime = (timestamp) => {
     try {
       return formatDistanceToNow(new Date(timestamp), {
@@ -19,6 +19,15 @@ function Sidebar({ conversations, selectedConversation, onSelectConversation, lo
       <div className="sidebar-header">
         <h2>IA Conversa</h2>
         <div className="sidebar-header-actions">
+          <button
+            className="icon-button crm-btn"
+            onClick={onNavigateToCRM}
+            title="CRM Kanban"
+          >
+            <svg viewBox="0 0 24 24" width="24" height="24">
+              <path fill="currentColor" d="M3,3H11V11H3V3M13,3H21V11H13V3M3,13H11V21H3V13M13,13H21V21H13V13Z" />
+            </svg>
+          </button>
           <button
             className="icon-button new-conversation-btn"
             onClick={onNewConversation}

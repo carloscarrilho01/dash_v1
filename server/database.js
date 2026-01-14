@@ -411,5 +411,89 @@ export const LeadDB = {
       console.error('Erro ao alternar trava:', error);
       return null;
     }
+  },
+
+  async findAll() {
+    if (!isConnected) return [];
+
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      return data.map(row => ({
+        uuid: row.uuid,
+        telefone: row.telefone,
+        nome: row.nome,
+        email: row.email,
+        status: row.status || 'novo',
+        trava: row.trava || false,
+        createdAt: row.created_at
+      }));
+    } catch (error) {
+      console.error('Erro ao buscar leads:', error);
+      return [];
+    }
+  },
+
+  async findByUuid(uuid) {
+    if (!isConnected) return null;
+
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .select('*')
+        .eq('uuid', uuid)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') return null;
+        throw error;
+      }
+
+      return {
+        uuid: data.uuid,
+        telefone: data.telefone,
+        nome: data.nome,
+        email: data.email,
+        status: data.status || 'novo',
+        trava: data.trava || false,
+        createdAt: data.created_at
+      };
+    } catch (error) {
+      console.error('Erro ao buscar lead:', error);
+      return null;
+    }
+  },
+
+  async updateStatus(uuid, status) {
+    if (!isConnected) return null;
+
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .update({ status })
+        .eq('uuid', uuid)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return {
+        uuid: data.uuid,
+        telefone: data.telefone,
+        nome: data.nome,
+        email: data.email,
+        status: data.status || 'novo',
+        trava: data.trava || false,
+        createdAt: data.created_at
+      };
+    } catch (error) {
+      console.error('Erro ao atualizar status do lead:', error);
+      return null;
+    }
   }
 };

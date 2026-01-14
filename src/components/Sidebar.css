@@ -52,6 +52,15 @@
   transform: scale(0.95);
 }
 
+.crm-btn {
+  background: transparent;
+}
+
+.crm-btn:hover {
+  background: var(--bg-hover);
+  color: var(--accent-primary);
+}
+
 .new-conversation-btn {
   background: var(--accent-primary);
   color: var(--bg-primary);

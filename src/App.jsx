@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { io } from 'socket.io-client'
 import Sidebar from './components/Sidebar'
 import ChatWindow from './components/ChatWindow'
+import KanbanBoard from './components/KanbanBoard'
 import NewConversationModal from './components/NewConversationModal'
 import './App.css'
 
@@ -17,6 +18,7 @@ const socket = io(API_URL)
 window.socket = socket
 
 function App() {
+  const [currentView, setCurrentView] = useState('chat') // 'chat' ou 'crm'
   const [conversations, setConversations] = useState([])
   const [selectedConversation, setSelectedConversation] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -142,18 +144,35 @@ function App() {
 
   return (
     <div className="app">
-      <Sidebar
-        conversations={conversations}
-        selectedConversation={selectedConversation}
-        onSelectConversation={handleSelectConversation}
-        onNewConversation={handleNewConversation}
-        loading={loading}
-      />
-      <ChatWindow
-        conversation={selectedConversation}
-        onSendMessage={handleSendMessage}
-        socket={socket}
-      />
+      {currentView === 'chat' ? (
+        <>
+          <Sidebar
+            conversations={conversations}
+            selectedConversation={selectedConversation}
+            onSelectConversation={handleSelectConversation}
+            onNewConversation={handleNewConversation}
+            onNavigateToCRM={() => setCurrentView('crm')}
+            loading={loading}
+          />
+          <ChatWindow
+            conversation={selectedConversation}
+            onSendMessage={handleSendMessage}
+            socket={socket}
+          />
+        </>
+      ) : (
+        <>
+          <div className="crm-nav">
+            <button className="back-button" onClick={() => setCurrentView('chat')}>
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+              </svg>
+              Voltar para Chat
+            </button>
+          </div>
+          <KanbanBoard socket={socket} />
+        </>
+      )}
 
       {showNewConversationModal && (
         <NewConversationModal

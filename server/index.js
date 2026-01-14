@@ -492,6 +492,62 @@ app.post('/api/leads/:userId/toggle-trava', async (req, res) => {
   }
 });
 
+// GET /api/leads - Lista todos os leads
+app.get('/api/leads', async (req, res) => {
+  try {
+    const leads = await LeadDB.findAll();
+    res.json(leads);
+  } catch (error) {
+    console.error('Erro ao buscar leads:', error);
+    res.status(500).json({ error: 'Erro ao buscar leads' });
+  }
+});
+
+// GET /api/leads/:uuid - Busca um lead específico
+app.get('/api/leads/:uuid', async (req, res) => {
+  try {
+    const { uuid } = req.params;
+    const lead = await LeadDB.findByUuid(uuid);
+
+    if (!lead) {
+      return res.status(404).json({ error: 'Lead não encontrado' });
+    }
+
+    res.json(lead);
+  } catch (error) {
+    console.error('Erro ao buscar lead:', error);
+    res.status(500).json({ error: 'Erro ao buscar lead' });
+  }
+});
+
+// PUT /api/leads/:uuid/status - Atualiza o status de um lead
+app.put('/api/leads/:uuid/status', async (req, res) => {
+  try {
+    const { uuid } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ error: 'Status é obrigatório' });
+    }
+
+    const updatedLead = await LeadDB.updateStatus(uuid, status);
+
+    if (!updatedLead) {
+      return res.status(404).json({ error: 'Lead não encontrado' });
+    }
+
+    // Emite evento WebSocket para atualizar todos os clientes
+    io.emit('lead-updated', updatedLead);
+
+    console.log(`📊 Status do lead ${uuid} atualizado para: ${status}`);
+
+    res.json(updatedLead);
+  } catch (error) {
+    console.error('Erro ao atualizar status do lead:', error);
+    res.status(500).json({ error: 'Erro ao atualizar status do lead' });
+  }
+});
+
 // Endpoint para enviar mensagem (intervenção manual)
 app.post('/api/conversations/:userId/send', async (req, res) => {
   try {
