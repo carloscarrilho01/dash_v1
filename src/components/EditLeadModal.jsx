@@ -34,7 +34,11 @@ function EditLeadModal({ lead, onClose, onLeadUpdated, onLeadDeleted }) {
     e.preventDefault()
     setError('')
 
-    if (!formData.nome.trim() || !formData.telefone.trim()) {
+    // Valida se os campos obrigatórios estão preenchidos
+    const nomeValido = formData.nome && formData.nome.trim().length > 0
+    const telefoneValido = formData.telefone && formData.telefone.trim().length > 0
+
+    if (!nomeValido || !telefoneValido) {
       setError('Nome e telefone são obrigatórios')
       return
     }

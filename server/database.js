@@ -593,6 +593,7 @@ export const LeadDB = {
     try {
       console.log('🔍 Atualizando lead com identificador:', identifier);
       console.log('🔍 Tipo do identificador:', typeof identifier);
+      console.log('🔍 Dados para atualizar:', leadData);
 
       const identifierStr = String(identifier);
 
@@ -616,16 +617,20 @@ export const LeadDB = {
         query = query.or(`telefone.eq.${identifier},telefone.eq.${cleanIdentifier}`);
       }
 
+      console.log('🔍 Executando busca no Supabase...');
       const { data: existingLead, error: findError } = await query.maybeSingle();
 
       if (findError) {
         console.error('❌ Erro ao buscar lead:', findError);
+        console.error('❌ Código do erro:', findError.code);
+        console.error('❌ Mensagem do erro:', findError.message);
         return null;
       }
 
       if (!existingLead) {
         console.error('❌ Lead não encontrado no banco de dados');
         console.error('❌ Identificador usado:', identifier);
+        console.error('❌ É UUID?', isUUID);
 
         // Debug: Lista alguns leads para verificar
         const { data: allLeads } = await supabase
@@ -637,6 +642,8 @@ export const LeadDB = {
         return null;
       }
 
+      console.log('✅ Lead encontrado:', existingLead);
+
       const updateData = {
         updated_at: new Date().toISOString()
       };
@@ -647,6 +654,9 @@ export const LeadDB = {
       if (leadData.status !== undefined) updateData.status = leadData.status;
       if (leadData.observacoes !== undefined) updateData.observacoes = leadData.observacoes;
 
+      console.log('🔄 Dados que serão atualizados:', updateData);
+      console.log('🔄 Atualizando lead com ID:', existingLead.id);
+
       const { data, error } = await supabase
         .from('leads')
         .update(updateData)
@@ -654,7 +664,15 @@ export const LeadDB = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Erro ao executar UPDATE no Supabase:', error);
+        console.error('❌ Código do erro:', error.code);
+        console.error('❌ Mensagem do erro:', error.message);
+        console.error('❌ Detalhes do erro:', error.details);
+        throw error;
+      }
+
+      console.log('✅ Lead atualizado com sucesso:', data);
 
       return {
         uuid: data.id,
@@ -667,7 +685,8 @@ export const LeadDB = {
         createdAt: data.created_at
       };
     } catch (error) {
-      console.error('Erro ao atualizar lead:', error);
+      console.error('❌ ERRO GERAL ao atualizar lead:', error);
+      console.error('❌ Stack trace:', error.stack);
       return null;
     }
   },
