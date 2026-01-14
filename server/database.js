@@ -360,7 +360,7 @@ export const LeadDB = {
       const { data, error } = await supabase
         .from('leads')
         .select('trava')
-        .eq('user_id', userId)
+        .eq('uuid', userId)
         .single();
 
       if (error) {
@@ -382,11 +382,10 @@ export const LeadDB = {
       const { error } = await supabase
         .from('leads')
         .upsert({
-          user_id: userId,
-          trava: travaValue,
-          updated_at: new Date().toISOString()
+          uuid: userId,
+          trava: travaValue
         }, {
-          onConflict: 'user_id'
+          onConflict: 'uuid'
         });
 
       if (error) throw error;
