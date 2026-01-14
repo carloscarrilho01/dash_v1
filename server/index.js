@@ -526,6 +526,8 @@ app.put('/api/leads/:uuid/status', async (req, res) => {
     const { uuid } = req.params;
     const { status } = req.body;
 
+    console.log('📥 Recebendo atualização de status:', { uuid, status });
+
     if (!status) {
       return res.status(400).json({ error: 'Status é obrigatório' });
     }
@@ -533,18 +535,23 @@ app.put('/api/leads/:uuid/status', async (req, res) => {
     const updatedLead = await LeadDB.updateStatus(uuid, status);
 
     if (!updatedLead) {
+      console.error('❌ Lead não encontrado:', uuid);
       return res.status(404).json({ error: 'Lead não encontrado' });
     }
 
     // Emite evento WebSocket para atualizar todos os clientes
     io.emit('lead-updated', updatedLead);
 
-    console.log(`📊 Status do lead ${uuid} atualizado para: ${status}`);
+    console.log(`✅ Status do lead ${uuid} atualizado para: ${status}`);
 
     res.json(updatedLead);
   } catch (error) {
-    console.error('Erro ao atualizar status do lead:', error);
-    res.status(500).json({ error: 'Erro ao atualizar status do lead' });
+    console.error('❌ Erro ao atualizar status do lead:', error);
+    console.error('Stack trace:', error.stack);
+    res.status(500).json({
+      error: 'Erro ao atualizar status do lead',
+      details: error.message
+    });
   }
 });
 

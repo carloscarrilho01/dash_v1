@@ -68,6 +68,8 @@ function KanbanBoard({ socket }) {
     }
 
     try {
+      console.log('📤 Atualizando lead:', draggedLead.uuid, 'para status:', newStatus)
+
       const response = await fetch(`${API_URL}/api/leads/${draggedLead.uuid}/status`, {
         method: 'PUT',
         headers: {
@@ -78,12 +80,18 @@ function KanbanBoard({ socket }) {
 
       if (response.ok) {
         const updatedLead = await response.json()
+        console.log('✅ Lead atualizado:', updatedLead)
         setLeads(prev => prev.map(lead =>
           lead.uuid === updatedLead.uuid ? updatedLead : lead
         ))
+      } else {
+        const errorData = await response.json()
+        console.error('❌ Erro na resposta:', response.status, errorData)
+        alert(`Erro ao atualizar lead: ${errorData.error || 'Erro desconhecido'}`)
       }
     } catch (error) {
-      console.error('Erro ao atualizar status do lead:', error)
+      console.error('❌ Erro ao atualizar status do lead:', error)
+      alert(`Erro ao atualizar lead: ${error.message}`)
     }
 
     setDraggedLead(null)
