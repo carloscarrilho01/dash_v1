@@ -591,28 +591,49 @@ export const LeadDB = {
     if (!isConnected) return null;
 
     try {
-      console.log('🔍 Atualizando lead:', identifier);
+      console.log('🔍 Atualizando lead com identificador:', identifier);
+      console.log('🔍 Tipo do identificador:', typeof identifier);
+
+      const identifierStr = String(identifier);
 
       // Limpa o telefone de caracteres especiais se for telefone
-      const cleanIdentifier = String(identifier).replace(/\D/g, '');
+      const cleanIdentifier = identifierStr.replace(/\D/g, '');
 
       // Tenta buscar por UUID primeiro, depois por telefone
       let query = supabase.from('leads').select('*');
 
-      // Se o identificador parece ser um UUID (tem hífens e letras), busca por uuid
-      if (identifier.includes('-') && /[a-f]/.test(String(identifier).toLowerCase())) {
-        console.log('🔍 Buscando por UUID');
+      // UUID tem formato: 8-4-4-4-12 caracteres hexadecimais separados por hífen
+      const isUUID = identifierStr.includes('-') && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifierStr);
+
+      if (isUUID) {
+        console.log('🔍 Detectado como UUID, buscando por id');
         query = query.eq('id', identifier);
       } else {
         // Caso contrário, busca por telefone
-        console.log('🔍 Buscando por telefone');
+        console.log('🔍 Detectado como telefone, buscando por telefone');
+        console.log('🔍 Telefone original:', identifier);
+        console.log('🔍 Telefone limpo:', cleanIdentifier);
         query = query.or(`telefone.eq.${identifier},telefone.eq.${cleanIdentifier}`);
       }
 
       const { data: existingLead, error: findError } = await query.maybeSingle();
 
-      if (findError || !existingLead) {
-        console.error('❌ Lead não encontrado');
+      if (findError) {
+        console.error('❌ Erro ao buscar lead:', findError);
+        return null;
+      }
+
+      if (!existingLead) {
+        console.error('❌ Lead não encontrado no banco de dados');
+        console.error('❌ Identificador usado:', identifier);
+
+        // Debug: Lista alguns leads para verificar
+        const { data: allLeads } = await supabase
+          .from('leads')
+          .select('id, telefone, nome')
+          .limit(5);
+        console.log('📋 Primeiros 5 leads no banco:', allLeads);
+
         return null;
       }
 
@@ -655,27 +676,36 @@ export const LeadDB = {
     if (!isConnected) return false;
 
     try {
-      console.log('🔍 Deletando lead:', identifier);
+      console.log('🔍 Deletando lead com identificador:', identifier);
+
+      const identifierStr = String(identifier);
 
       // Limpa o telefone de caracteres especiais se for telefone
-      const cleanIdentifier = String(identifier).replace(/\D/g, '');
+      const cleanIdentifier = identifierStr.replace(/\D/g, '');
 
       // Tenta buscar por UUID primeiro, depois por telefone
       let query = supabase.from('leads').select('*');
 
-      // Se o identificador parece ser um UUID (tem hífens e letras), busca por uuid
-      if (identifier.includes('-') && /[a-f]/.test(String(identifier).toLowerCase())) {
-        console.log('🔍 Buscando por UUID');
+      // UUID tem formato: 8-4-4-4-12 caracteres hexadecimais separados por hífen
+      const isUUID = identifierStr.includes('-') && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifierStr);
+
+      if (isUUID) {
+        console.log('🔍 Detectado como UUID, buscando por id');
         query = query.eq('id', identifier);
       } else {
         // Caso contrário, busca por telefone
-        console.log('🔍 Buscando por telefone');
+        console.log('🔍 Detectado como telefone, buscando por telefone');
         query = query.or(`telefone.eq.${identifier},telefone.eq.${cleanIdentifier}`);
       }
 
       const { data: existingLead, error: findError } = await query.maybeSingle();
 
-      if (findError || !existingLead) {
+      if (findError) {
+        console.error('❌ Erro ao buscar lead:', findError);
+        return false;
+      }
+
+      if (!existingLead) {
         console.error('❌ Lead não encontrado');
         return false;
       }
