@@ -473,6 +473,26 @@ export const LeadDB = {
     if (!isConnected) return null;
 
     try {
+      console.log('🔍 Buscando lead com uuid:', uuid);
+
+      // Primeiro verifica se o lead existe
+      const { data: existingLead, error: findError } = await supabase
+        .from('leads')
+        .select('*')
+        .eq('uuid', uuid)
+        .single();
+
+      if (findError) {
+        console.error('❌ Erro ao buscar lead:', findError);
+        if (findError.code === 'PGRST116') {
+          console.error('Lead não encontrado no Supabase');
+        }
+        return null;
+      }
+
+      console.log('✅ Lead encontrado:', existingLead);
+
+      // Atualiza o status
       const { data, error } = await supabase
         .from('leads')
         .update({ status })
@@ -480,7 +500,12 @@ export const LeadDB = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Erro ao atualizar status:', error);
+        throw error;
+      }
+
+      console.log('✅ Status atualizado com sucesso:', data);
 
       return {
         uuid: data.uuid,
@@ -492,7 +517,7 @@ export const LeadDB = {
         createdAt: data.created_at
       };
     } catch (error) {
-      console.error('Erro ao atualizar status do lead:', error);
+      console.error('❌ Erro ao atualizar status do lead:', error);
       return null;
     }
   }
