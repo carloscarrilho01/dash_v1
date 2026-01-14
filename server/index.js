@@ -394,6 +394,48 @@ app.post('/api/conversations/new', async (req, res) => {
       conversation: newConversation
     });
 
+    // Envia webhook para n8n se houver mensagem inicial
+    if (initialMessage) {
+      const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || 'https://webhookworkflow.carrilhodev.com/webhook/agentteste';
+
+      try {
+        const webhookPayload = {
+          userId,
+          userName,
+          message: initialMessage,
+          type: 'text',
+          isAgent: true,
+          messageId: Date.now().toString(),
+          timestamp: new Date().toISOString(),
+          source: 'dashboard',
+          isNewConversation: true
+        };
+
+        console.log('📤 Enviando webhook para n8n (nova conversa):', N8N_WEBHOOK_URL);
+        console.log('📦 Payload:', JSON.stringify(webhookPayload, null, 2));
+
+        const webhookResponse = await fetch(N8N_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(webhookPayload)
+        });
+
+        const responseText = await webhookResponse.text();
+        console.log('📥 Resposta do webhook:', webhookResponse.status, responseText);
+
+        if (webhookResponse.ok) {
+          console.log('✅ Webhook enviado com sucesso para n8n');
+        } else {
+          console.error('❌ Erro ao enviar webhook para n8n:', webhookResponse.status, responseText);
+        }
+      } catch (error) {
+        console.error('❌ Erro ao enviar webhook para n8n:', error.message);
+        console.error('Stack trace:', error.stack);
+      }
+    }
+
     res.status(201).json(newConversation);
   } catch (error) {
     console.error('Erro ao criar nova conversa:', error);
