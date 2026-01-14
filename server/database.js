@@ -547,5 +547,38 @@ export const LeadDB = {
       console.error('Stack trace:', error.stack);
       return null;
     }
+  },
+
+  async create(leadData) {
+    if (!isConnected) return null;
+
+    try {
+      const { data, error } = await supabase
+        .from('leads')
+        .insert({
+          telefone: leadData.telefone,
+          nome: leadData.nome,
+          email: leadData.email || null,
+          status: leadData.status || 'novo',
+          trava: false
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      return {
+        uuid: data.id,
+        telefone: data.telefone,
+        nome: data.nome,
+        email: data.email,
+        status: data.status || 'novo',
+        trava: data.trava || false,
+        createdAt: data.created_at
+      };
+    } catch (error) {
+      console.error('Erro ao criar lead:', error);
+      return null;
+    }
   }
 };

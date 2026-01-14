@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import AddLeadModal from './AddLeadModal'
 import './KanbanBoard.css'
 
 const API_URL = import.meta.env.VITE_API_URL || (
@@ -19,6 +20,7 @@ function KanbanBoard({ socket }) {
   const [leads, setLeads] = useState([])
   const [loading, setLoading] = useState(true)
   const [draggedLead, setDraggedLead] = useState(null)
+  const [showAddLeadModal, setShowAddLeadModal] = useState(false)
 
   useEffect(() => {
     fetchLeads()
@@ -31,8 +33,13 @@ function KanbanBoard({ socket }) {
         ))
       })
 
+      socket.on('lead-created', (newLead) => {
+        setLeads(prev => [newLead, ...prev])
+      })
+
       return () => {
         socket.off('lead-updated')
+        socket.off('lead-created')
       }
     }
   }, [socket])
@@ -123,6 +130,11 @@ function KanbanBoard({ socket }) {
     return phone
   }
 
+  const handleLeadCreated = (newLead) => {
+    setLeads(prev => [newLead, ...prev])
+    setShowAddLeadModal(false)
+  }
+
   if (loading) {
     return (
       <div className="kanban-loading">
@@ -140,6 +152,12 @@ function KanbanBoard({ socket }) {
           <span className="stat-item">
             <strong>{leads.length}</strong> Leads
           </span>
+          <button className="add-lead-button" onClick={() => setShowAddLeadModal(true)}>
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+            </svg>
+            Adicionar Lead
+          </button>
         </div>
       </div>
 
@@ -209,6 +227,13 @@ function KanbanBoard({ socket }) {
           )
         })}
       </div>
+
+      {showAddLeadModal && (
+        <AddLeadModal
+          onClose={() => setShowAddLeadModal(false)}
+          onLeadCreated={handleLeadCreated}
+        />
+      )}
     </div>
   )
 }

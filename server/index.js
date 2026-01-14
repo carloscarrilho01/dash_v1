@@ -503,6 +503,50 @@ app.get('/api/leads', async (req, res) => {
   }
 });
 
+// POST /api/leads - Cria um novo lead
+app.post('/api/leads', async (req, res) => {
+  try {
+    const { telefone, nome, email, status } = req.body;
+
+    if (!telefone || !nome) {
+      return res.status(400).json({ error: 'Telefone e nome são obrigatórios' });
+    }
+
+    // Verifica se já existe um lead com este telefone
+    const cleanPhone = String(telefone).replace(/\D/g, '');
+    const leads = await LeadDB.findAll();
+    const existingLead = leads.find(lead => {
+      const leadPhone = String(lead.telefone).replace(/\D/g, '');
+      return leadPhone === cleanPhone;
+    });
+
+    if (existingLead) {
+      return res.status(409).json({ error: 'Já existe um lead com este telefone' });
+    }
+
+    const newLead = await LeadDB.create({
+      telefone,
+      nome,
+      email: email || null,
+      status: status || 'novo'
+    });
+
+    if (!newLead) {
+      return res.status(500).json({ error: 'Erro ao criar lead' });
+    }
+
+    // Emite evento WebSocket para atualizar todos os clientes
+    io.emit('lead-created', newLead);
+
+    console.log(`✅ Lead criado com sucesso: ${nome} (${telefone})`);
+
+    res.status(201).json(newLead);
+  } catch (error) {
+    console.error('Erro ao criar lead:', error);
+    res.status(500).json({ error: 'Erro ao criar lead' });
+  }
+});
+
 // GET /api/leads/:uuid - Busca um lead específico
 app.get('/api/leads/:uuid', async (req, res) => {
   try {

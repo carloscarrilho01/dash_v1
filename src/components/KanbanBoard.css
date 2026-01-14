@@ -25,6 +25,7 @@
 .kanban-stats {
   display: flex;
   gap: 24px;
+  align-items: center;
 }
 
 .stat-item {
@@ -36,6 +37,31 @@
   color: var(--accent-primary);
   font-size: 18px;
   margin-right: 4px;
+}
+
+.add-lead-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-lead-button:hover {
+  background: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
+.add-lead-button:active {
+  transform: translateY(0);
 }
 
 .kanban-columns {
