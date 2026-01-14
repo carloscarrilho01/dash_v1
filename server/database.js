@@ -469,18 +469,24 @@ export const LeadDB = {
     }
   },
 
-  async updateStatus(uuid, status) {
+  async updateStatus(identifier, status) {
     if (!isConnected) return null;
 
     try {
-      console.log('🔍 Buscando lead com uuid:', uuid);
+      console.log('🔍 Buscando lead com identificador:', identifier);
 
-      // Primeiro verifica se o lead existe
-      const { data: existingLead, error: findError } = await supabase
-        .from('leads')
-        .select('*')
-        .eq('uuid', uuid)
-        .single();
+      // Tenta buscar por UUID primeiro, depois por telefone
+      let query = supabase.from('leads').select('*');
+
+      // Se o identificador parece ser um UUID (tem hífens), busca por uuid
+      if (identifier.includes('-')) {
+        query = query.eq('uuid', identifier);
+      } else {
+        // Caso contrário, busca por telefone
+        query = query.eq('telefone', identifier);
+      }
+
+      const { data: existingLead, error: findError } = await query.single();
 
       if (findError) {
         console.error('❌ Erro ao buscar lead:', findError);
@@ -492,11 +498,11 @@ export const LeadDB = {
 
       console.log('✅ Lead encontrado:', existingLead);
 
-      // Atualiza o status
+      // Atualiza o status usando o uuid encontrado
       const { data, error } = await supabase
         .from('leads')
         .update({ status })
-        .eq('uuid', uuid)
+        .eq('uuid', existingLead.uuid)
         .select()
         .single();
 
