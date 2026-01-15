@@ -264,3 +264,10 @@
     opacity: 0.8;
   }
 }
+
+/* Responsividade - Esconde sidebar em mobile */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+}

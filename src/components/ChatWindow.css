@@ -294,3 +294,60 @@
     transform: rotate(360deg);
   }
 }
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+  /* Ajusta chat window para compensar header mobile */
+  .chat-window {
+    padding-top: 60px;
+  }
+
+  /* Ajusta header do chat para ficar abaixo do header mobile */
+  .chat-header {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    z-index: 99;
+  }
+
+  /* Ajusta a área de mensagens */
+  .chat-messages {
+    padding-top: 60px; /* Compensa o header fixo */
+  }
+
+  /* Ajusta tamanhos de fonte */
+  .chat-header-info h3 {
+    font-size: 15px;
+  }
+
+  .user-id {
+    font-size: 12px;
+  }
+
+  /* Ajusta botões do header */
+  .trava-button,
+  .chat-avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 375px) {
+  .chat-window {
+    padding-top: 56px;
+  }
+
+  .chat-header {
+    top: 56px;
+    padding: 8px 12px;
+  }
+
+  .chat-messages {
+    padding-top: 56px;
+  }
+
+  .chat-header-info h3 {
+    font-size: 14px;
+  }
+}

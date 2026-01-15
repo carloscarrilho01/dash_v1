@@ -79,3 +79,28 @@
 .nav-button svg {
   flex-shrink: 0;
 }
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+  /* Esconde os botões de navegação desktop em mobile */
+  .crm-nav,
+  .analytics-nav,
+  .whatsapp-nav {
+    display: none;
+  }
+
+  /* Ajusta views para compensar header mobile */
+  .crm-view,
+  .analytics-view,
+  .whatsapp-view {
+    padding-top: 60px;
+  }
+}
+
+@media (max-width: 375px) {
+  .crm-view,
+  .analytics-view,
+  .whatsapp-view {
+    padding-top: 56px;
+  }
+}

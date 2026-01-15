@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { io } from 'socket.io-client'
 import Sidebar from './components/Sidebar'
+import MobileNav from './components/MobileNav'
 import ChatWindow from './components/ChatWindow'
 import KanbanBoard from './components/KanbanBoard'
 import Analytics from './components/Analytics'
@@ -172,6 +173,14 @@ function App() {
 
   return (
     <div className="app">
+      {/* Menu Mobile - visível apenas em mobile */}
+      <MobileNav
+        currentView={currentView}
+        onNavigate={setCurrentView}
+        onNavigateToWhatsApp={() => setCurrentView('whatsapp')}
+        onNewConversation={handleNewConversation}
+      />
+
       {currentView === 'chat' ? (
         <>
           <Sidebar
