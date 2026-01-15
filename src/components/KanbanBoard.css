@@ -331,37 +331,41 @@
 
 @media (max-width: 768px) {
   .stats-cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     padding: 16px;
-    gap: 12px;
+    gap: 8px;
   }
 
   .stat-card {
-    padding: 16px 12px;
+    padding: 10px 8px;
     flex-direction: column;
-    aspect-ratio: 1;
-    max-height: 140px;
+    height: 90px;
     justify-content: space-between;
     text-align: center;
   }
 
   .stat-icon {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     margin: 0 auto;
+  }
+
+  .stat-icon svg {
+    width: 16px;
+    height: 16px;
   }
 
   .stat-content {
     align-items: center;
-    gap: 8px;
+    gap: 4px;
   }
 
   .stat-label {
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .stat-value {
-    font-size: 28px;
+    font-size: 20px;
   }
 
   .kanban-columns {
@@ -372,24 +376,29 @@
 @media (max-width: 375px) {
   .stats-cards {
     padding: 12px;
-    gap: 10px;
+    gap: 6px;
   }
 
   .stat-card {
-    padding: 12px 10px;
-    max-height: 120px;
+    padding: 8px 6px;
+    height: 80px;
   }
 
   .stat-icon {
-    width: 36px;
-    height: 36px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .stat-icon svg {
+    width: 14px;
+    height: 14px;
   }
 
   .stat-label {
-    font-size: 11px;
+    font-size: 9px;
   }
 
   .stat-value {
-    font-size: 24px;
+    font-size: 18px;
   }
 }
