@@ -12,7 +12,8 @@
 }
 
 .crm-nav,
-.analytics-nav {
+.analytics-nav,
+.whatsapp-nav {
   width: 100%;
   background: var(--bg-tertiary);
   padding: 16px 24px;
@@ -22,7 +23,8 @@
   gap: 12px;
 }
 
-.analytics-view {
+.analytics-view,
+.whatsapp-view {
   display: flex;
   flex-direction: column;
   width: 100%;

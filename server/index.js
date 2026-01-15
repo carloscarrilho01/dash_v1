@@ -973,6 +973,154 @@ app.post('/api/conversations/:userId/send', async (req, res) => {
   }
 });
 
+// ====================================
+// EVOLUTION API - WhatsApp Integration
+// ====================================
+
+const EVOLUTION_API_URL = process.env.EVOLUTION_API_URL || 'http://localhost:8080';
+const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY || '';
+
+// Helper: Faz requisição para Evolution API
+async function evolutionApiRequest(endpoint, method = 'GET', body = null) {
+  const url = `${EVOLUTION_API_URL}${endpoint}`;
+  const options = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': EVOLUTION_API_KEY
+    }
+  };
+
+  if (body && method !== 'GET') {
+    options.body = JSON.stringify(body);
+  }
+
+  console.log(`🌐 Evolution API: ${method} ${endpoint}`);
+
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('❌ Evolution API Error:', data);
+      throw new Error(data.message || 'Evolution API request failed');
+    }
+
+    console.log('✅ Evolution API Response:', data);
+    return data;
+  } catch (error) {
+    console.error('❌ Erro ao chamar Evolution API:', error.message);
+    throw error;
+  }
+}
+
+// GET /api/whatsapp/instances - Lista todas as instâncias
+app.get('/api/whatsapp/instances', async (req, res) => {
+  try {
+    const data = await evolutionApiRequest('/instance/fetchInstances');
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/whatsapp/instance/create - Cria nova instância
+app.post('/api/whatsapp/instance/create', async (req, res) => {
+  try {
+    const { instanceName, qrcode = true, integration = 'WHATSAPP-BAILEYS' } = req.body;
+
+    if (!instanceName || !instanceName.trim()) {
+      return res.status(400).json({ error: 'Nome da instância é obrigatório' });
+    }
+
+    const payload = {
+      instanceName: instanceName.trim(),
+      qrcode,
+      integration
+    };
+
+    const data = await evolutionApiRequest('/instance/create', 'POST', payload);
+
+    // Se QR code foi gerado, emite via WebSocket
+    if (data.qrcode) {
+      io.emit('whatsapp-qr', {
+        instance: instanceName,
+        qr: data.qrcode.code || data.qrcode
+      });
+    }
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/whatsapp/instance/:name/connect - Conecta instância e retorna QR code
+app.get('/api/whatsapp/instance/:name/connect', async (req, res) => {
+  try {
+    const { name } = req.params;
+    const data = await evolutionApiRequest(`/instance/connect/${name}`);
+
+    // Emite QR code via WebSocket
+    if (data.qrcode) {
+      io.emit('whatsapp-qr', {
+        instance: name,
+        qr: data.qrcode.code || data.qrcode
+      });
+    }
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/whatsapp/instance/:name/status - Verifica status da instância
+app.get('/api/whatsapp/instance/:name/status', async (req, res) => {
+  try {
+    const { name } = req.params;
+    const data = await evolutionApiRequest(`/instance/connectionState/${name}`);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// DELETE /api/whatsapp/instance/:name/logout - Desconecta instância
+app.delete('/api/whatsapp/instance/:name/logout', async (req, res) => {
+  try {
+    const { name } = req.params;
+    const data = await evolutionApiRequest(`/instance/logout/${name}`, 'DELETE');
+
+    // Emite status via WebSocket
+    io.emit('whatsapp-status', {
+      instance: name,
+      status: 'disconnected'
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// DELETE /api/whatsapp/instance/:name - Deleta instância
+app.delete('/api/whatsapp/instance/:name', async (req, res) => {
+  try {
+    const { name } = req.params;
+    const data = await evolutionApiRequest(`/instance/delete/${name}`, 'DELETE');
+
+    // Emite remoção via WebSocket
+    io.emit('whatsapp-instance-deleted', {
+      instance: name
+    });
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // WebSocket connection
 io.on('connection', async (socket) => {
   console.log('Cliente conectado:', socket.id);
