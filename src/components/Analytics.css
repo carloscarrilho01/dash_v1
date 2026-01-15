@@ -371,77 +371,24 @@
   }
 
   .analytics-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-
-  .metric-card {
-    padding: 16px 12px;
-    aspect-ratio: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    grid-template-columns: 1fr;
   }
 
   .metric-card.primary,
   .metric-card.large,
   .metric-card.full-width {
-    grid-column: span 1;
-  }
-
-  .metric-header {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .metric-label {
-    font-size: 12px;
+    grid-column: 1;
   }
 
   .metric-value {
-    font-size: 28px;
-  }
-
-  .metric-value-large {
-    font-size: 32px;
-  }
-
-  .metric-value-huge {
     font-size: 36px;
   }
-}
-
-@media (max-width: 375px) {
-  .analytics-container {
-    padding: 12px;
-  }
-
-  .analytics-header h1 {
-    font-size: 20px;
-  }
-
-  .analytics-grid {
-    gap: 10px;
-  }
-
-  .metric-card {
-    padding: 12px 10px;
-  }
-
-  .metric-label {
-    font-size: 11px;
-  }
-
-  .metric-value {
-    font-size: 24px;
-  }
 
   .metric-value-large {
-    font-size: 28px;
+    font-size: 42px;
   }
 
   .metric-value-huge {
-    font-size: 32px;
+    font-size: 56px;
   }
 }
