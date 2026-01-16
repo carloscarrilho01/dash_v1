@@ -8,6 +8,7 @@ import ChatWindow from './components/ChatWindow'
 import KanbanBoard from './components/KanbanBoard'
 import Analytics from './components/Analytics'
 import WhatsAppConnection from './components/WhatsAppConnection'
+import ProductStock from './components/ProductStock'
 import NewConversationModal from './components/NewConversationModal'
 import './App.css'
 
@@ -24,7 +25,7 @@ window.socket = socket
 
 function App() {
   const { user, loading: authLoading } = useAuth()
-  const [currentView, setCurrentView] = useState('chat') // 'chat', 'crm', 'analytics' ou 'whatsapp'
+  const [currentView, setCurrentView] = useState('chat') // 'chat', 'crm', 'analytics', 'whatsapp' ou 'stock'
   const [conversations, setConversations] = useState([])
   const [selectedConversation, setSelectedConversation] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -271,7 +272,7 @@ function App() {
           </div>
           <Analytics socket={socket} />
         </div>
-      ) : (
+      ) : currentView === 'whatsapp' ? (
         <div className="whatsapp-view">
           <div className="whatsapp-nav">
             <button className="back-button" onClick={() => setCurrentView('chat')}>
@@ -294,6 +295,10 @@ function App() {
             </button>
           </div>
           <WhatsAppConnection socket={socket} />
+        </div>
+      ) : (
+        <div className="stock-view">
+          <ProductStock />
         </div>
       )}
 
