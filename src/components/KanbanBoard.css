@@ -4,6 +4,9 @@
   flex-direction: column;
   background: var(--bg-primary);
   overflow: hidden;
+  max-width: 1800px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .kanban-header {
@@ -134,7 +137,8 @@
 
 .kanban-column {
   min-width: 300px;
-  max-width: 300px;
+  max-width: 340px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   background: var(--bg-secondary);

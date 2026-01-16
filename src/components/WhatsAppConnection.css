@@ -4,6 +4,8 @@
   background: var(--bg-primary);
   padding: 24px;
   color: var(--text-primary);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .whatsapp-header {
