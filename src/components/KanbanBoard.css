@@ -330,16 +330,21 @@
 }
 
 @media (max-width: 768px) {
+  .kanban-board-container {
+    padding-bottom: 70px;
+  }
+
   .stats-cards {
     grid-template-columns: repeat(4, 1fr);
-    padding: 16px;
-    gap: 8px;
+    padding: 12px;
+    gap: 6px;
   }
 
   .stat-card {
     padding: 8px 6px;
     flex-direction: column;
-    height: 90px;
+    height: 85px;
+    min-width: 70px;
     justify-content: space-between;
     text-align: center;
   }
@@ -363,15 +368,44 @@
   .stat-label {
     font-size: 9px;
     line-height: 1.1;
+    white-space: nowrap;
   }
 
   .stat-value {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
   }
 
   .kanban-columns {
-    padding: 8px 16px 16px 16px;
+    gap: 8px;
+    padding: 8px 12px 80px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .column {
+    min-width: 260px;
+    max-width: 260px;
+    flex-shrink: 0;
+  }
+
+  .column-header {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .lead-card {
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+
+  .lead-header h4 {
+    font-size: 14px;
+  }
+
+  .lead-info {
+    font-size: 12px;
   }
 }
 

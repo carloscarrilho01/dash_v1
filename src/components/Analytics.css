@@ -354,24 +354,39 @@
 
 @media (max-width: 768px) {
   .analytics-container {
-    padding: 16px;
+    padding: 12px;
+    padding-bottom: 80px;
+  }
+
+  .analytics-header {
+    padding: 12px;
   }
 
   .analytics-header h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .analytics-filters {
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 12px 12px 12px;
   }
 
   .filter-button {
     white-space: nowrap;
+    padding: 8px 14px;
+    font-size: 13px;
   }
 
   .analytics-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+  .metric-card {
+    padding: 14px;
   }
 
   .metric-card.primary,
@@ -380,15 +395,23 @@
     grid-column: 1;
   }
 
+  .metric-label {
+    font-size: 12px;
+  }
+
   .metric-value {
-    font-size: 36px;
+    font-size: 32px;
   }
 
   .metric-value-large {
-    font-size: 42px;
+    font-size: 38px;
   }
 
   .metric-value-huge {
-    font-size: 56px;
+    font-size: 48px;
+  }
+
+  .metric-subtitle {
+    font-size: 12px;
   }
 }
