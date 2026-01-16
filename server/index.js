@@ -181,6 +181,59 @@ app.post('/api/webhook/message', async (req, res) => {
   }
 });
 
+// Endpoint para receber webhooks de produtos
+app.post('/api/webhook/product', async (req, res) => {
+  try {
+    const { event, product, timestamp } = req.body;
+
+    console.log('📦 Webhook de produto recebido:', event);
+    console.log('📦 Dados do produto:', product);
+
+    // Usa a mesma URL do webhook de status de lead ou a URL padrão do n8n
+    const PRODUCT_WEBHOOK_URL = process.env.PRODUCT_WEBHOOK_URL || process.env.LEAD_STATUS_WEBHOOK_URL || process.env.N8N_WEBHOOK_URL;
+
+    if (PRODUCT_WEBHOOK_URL) {
+      try {
+        const webhookPayload = {
+          event,
+          product,
+          timestamp: timestamp || new Date().toISOString()
+        };
+
+        console.log('📤 Enviando webhook de produto para n8n:', PRODUCT_WEBHOOK_URL);
+        console.log('📦 Payload:', JSON.stringify(webhookPayload, null, 2));
+
+        const webhookResponse = await fetch(PRODUCT_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(webhookPayload)
+        });
+
+        const responseText = await webhookResponse.text();
+        console.log('📥 Resposta do webhook:', webhookResponse.status, responseText);
+
+        if (webhookResponse.ok) {
+          console.log('✅ Webhook de produto enviado com sucesso para n8n');
+        } else {
+          console.error('❌ Erro ao enviar webhook de produto:', webhookResponse.status, responseText);
+        }
+      } catch (error) {
+        console.error('❌ Erro ao enviar webhook de produto para n8n:', error.message);
+        // Não falha a requisição se o webhook falhar
+      }
+    } else {
+      console.log('⚠️  Nenhuma URL de webhook configurada para produtos');
+    }
+
+    res.json({ success: true, received: true });
+  } catch (error) {
+    console.error('❌ Erro ao processar webhook de produto:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+});
+
 // Endpoint para obter todas as conversas
 app.get('/api/conversations', async (req, res) => {
   try {

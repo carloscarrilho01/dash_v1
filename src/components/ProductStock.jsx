@@ -3,6 +3,12 @@ import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import './ProductStock.css'
 
+const API_URL = import.meta.env.VITE_API_URL || (
+  import.meta.env.MODE === 'production'
+    ? window.location.origin
+    : 'http://localhost:3001'
+)
+
 function ProductStock() {
   const { user } = useAuth()
   const [products, setProducts] = useState([])
@@ -55,48 +61,107 @@ function ProductStock() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  const sendProductWebhook = async (product, action) => {
+    try {
+      const webhookPayload = {
+        event: action === 'create' ? 'product_created' : 'product_updated',
+        product: {
+          id: product.id,
+          name: product.name,
+          sku: product.sku,
+          category: product.category,
+          price: product.price,
+          cost: product.cost,
+          stock: product.stock,
+          minStock: product.min_stock,
+          description: product.description,
+          supplier: product.supplier,
+          userId: user.id
+        },
+        timestamp: new Date().toISOString()
+      }
+
+      console.log('📤 Enviando webhook de produto:', webhookPayload)
+
+      const response = await fetch(`${API_URL}/api/webhook/product`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(webhookPayload)
+      })
+
+      if (response.ok) {
+        console.log('✅ Webhook de produto enviado com sucesso')
+      } else {
+        console.error('❌ Erro ao enviar webhook de produto:', response.status)
+      }
+    } catch (error) {
+      console.error('❌ Erro ao enviar webhook de produto:', error)
+      // Não falha a operação se o webhook falhar
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSaving(true)
 
     try {
+      let productData
+
       if (editingProduct) {
         // Editar produto existente
-        const { error } = await supabase
+        const updateData = {
+          name: formData.name,
+          sku: formData.sku,
+          category: formData.category,
+          price: parseFloat(formData.price),
+          cost: parseFloat(formData.cost),
+          stock: parseInt(formData.stock),
+          min_stock: parseInt(formData.minStock),
+          description: formData.description,
+          supplier: formData.supplier
+        }
+
+        const { data, error } = await supabase
           .from('products')
-          .update({
-            name: formData.name,
-            sku: formData.sku,
-            category: formData.category,
-            price: parseFloat(formData.price),
-            cost: parseFloat(formData.cost),
-            stock: parseInt(formData.stock),
-            min_stock: parseInt(formData.minStock),
-            description: formData.description,
-            supplier: formData.supplier
-          })
+          .update(updateData)
           .eq('id', editingProduct.id)
           .eq('user_id', user.id)
+          .select()
+          .single()
 
         if (error) throw error
+
+        productData = data
+        // Envia webhook para produto atualizado
+        await sendProductWebhook(productData, 'update')
       } else {
         // Adicionar novo produto
-        const { error } = await supabase
+        const insertData = {
+          user_id: user.id,
+          name: formData.name,
+          sku: formData.sku,
+          category: formData.category,
+          price: parseFloat(formData.price),
+          cost: parseFloat(formData.cost),
+          stock: parseInt(formData.stock),
+          min_stock: parseInt(formData.minStock),
+          description: formData.description,
+          supplier: formData.supplier
+        }
+
+        const { data, error } = await supabase
           .from('products')
-          .insert([{
-            user_id: user.id,
-            name: formData.name,
-            sku: formData.sku,
-            category: formData.category,
-            price: parseFloat(formData.price),
-            cost: parseFloat(formData.cost),
-            stock: parseInt(formData.stock),
-            min_stock: parseInt(formData.minStock),
-            description: formData.description,
-            supplier: formData.supplier
-          }])
+          .insert([insertData])
+          .select()
+          .single()
 
         if (error) throw error
+
+        productData = data
+        // Envia webhook para produto criado
+        await sendProductWebhook(productData, 'create')
       }
 
       await fetchProducts()
