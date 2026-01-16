@@ -223,6 +223,8 @@ function App() {
             onSendMessage={handleSendMessage}
             onLoadMoreMessages={handleLoadMoreMessages}
             socket={socket}
+            conversations={conversations}
+            onSelectConversation={handleSelectConversation}
           />
         </>
       ) : currentView === 'crm' ? (

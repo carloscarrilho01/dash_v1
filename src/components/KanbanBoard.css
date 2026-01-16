@@ -339,44 +339,48 @@
   }
 
   .stats-cards {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     padding: 12px;
-    gap: 6px;
+    gap: 10px;
   }
 
   .stat-card {
-    padding: 8px 6px;
-    flex-direction: column;
-    height: 85px;
-    min-width: 70px;
-    justify-content: space-between;
-    text-align: center;
+    padding: 12px 10px;
+    flex-direction: row;
+    height: auto;
+    min-width: 0;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 12px;
   }
 
   .stat-icon {
-    width: 24px;
-    height: 24px;
-    margin: 0 auto;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    flex-shrink: 0;
   }
 
   .stat-icon svg {
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
   }
 
   .stat-content {
-    align-items: center;
-    gap: 2px;
+    align-items: flex-start;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
   }
 
   .stat-label {
-    font-size: 9px;
-    line-height: 1.1;
-    white-space: nowrap;
+    font-size: 11px;
+    line-height: 1.2;
+    white-space: normal;
   }
 
   .stat-value {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
   }
 

@@ -16,10 +16,11 @@ const API_URL = import.meta.env.VITE_API_URL || (
     : 'http://localhost:3001'
 );
 
-function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket }) {
+function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, conversations, onSelectConversation }) {
   const [message, setMessage] = useState('')
   const [showManager, setShowManager] = useState(false)
   const [showSignatureManager, setShowSignatureManager] = useState(false)
+  const [showConversationsList, setShowConversationsList] = useState(false)
   const [isTravado, setIsTravado] = useState(false)
   const [isTogglingTrava, setIsTogglingTrava] = useState(false)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
@@ -199,6 +200,15 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket })
   return (
     <div className="chat-window">
       <div className="chat-header">
+        <button
+          className="conversations-toggle-button"
+          onClick={() => setShowConversationsList(true)}
+          title="Ver conversas"
+        >
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" />
+          </svg>
+        </button>
         <div className="chat-header-info">
           <div className="chat-avatar">
             <svg viewBox="0 0 24 24" width="40" height="40">
@@ -353,6 +363,55 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket })
             }
           }}
         />
+      )}
+
+      {showConversationsList && (
+        <div className="mobile-conversations-modal" onClick={() => setShowConversationsList(false)}>
+          <div className="mobile-conversations-content" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-conversations-header">
+              <h3>Conversas</h3>
+              <button
+                className="close-conversations-button"
+                onClick={() => setShowConversationsList(false)}
+              >
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                  <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+                </svg>
+              </button>
+            </div>
+            <div className="mobile-conversations-list">
+              {conversations && conversations.length > 0 ? (
+                conversations.map((conv) => (
+                  <div
+                    key={conv.userId}
+                    className={`mobile-conversation-item ${conversation?.userId === conv.userId ? 'active' : ''}`}
+                    onClick={() => {
+                      onSelectConversation(conv)
+                      setShowConversationsList(false)
+                    }}
+                  >
+                    <div className="mobile-conversation-avatar">
+                      {conv.userName ? conv.userName.charAt(0).toUpperCase() : '?'}
+                    </div>
+                    <div className="mobile-conversation-info">
+                      <div className="mobile-conversation-header">
+                        <span className="mobile-conversation-name">{conv.userName || 'Sem nome'}</span>
+                        {conv.unread > 0 && (
+                          <span className="mobile-unread-badge">{conv.unread}</span>
+                        )}
+                      </div>
+                      <p className="mobile-conversation-preview">{conv.lastMessage || 'Sem mensagens'}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="mobile-empty-conversations">
+                  <p>Nenhuma conversa disponível</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
