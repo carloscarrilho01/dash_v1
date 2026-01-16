@@ -173,11 +173,8 @@
 .agent-name-label {
   font-size: 12px;
   font-weight: 500;
-  color: #9b59b6;
-  padding: 2px 8px;
+  color: var(--text-secondary);
   margin-bottom: 4px;
-  background: rgba(155, 89, 182, 0.15);
-  border-radius: 4px;
   display: inline-block;
   max-width: 65%;
 }
