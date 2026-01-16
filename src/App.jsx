@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { io } from 'socket.io-client'
+import { useAuth } from './contexts/AuthContext'
+import Login from './components/Login'
 import Sidebar from './components/Sidebar'
 import MobileNav from './components/MobileNav'
 import ChatWindow from './components/ChatWindow'
@@ -21,11 +23,25 @@ const socket = io(API_URL)
 window.socket = socket
 
 function App() {
+  const { user, loading: authLoading } = useAuth()
   const [currentView, setCurrentView] = useState('chat') // 'chat', 'crm', 'analytics' ou 'whatsapp'
   const [conversations, setConversations] = useState([])
   const [selectedConversation, setSelectedConversation] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showNewConversationModal, setShowNewConversationModal] = useState(false)
+
+  // Mostra tela de login se não estiver autenticado
+  if (authLoading) {
+    return (
+      <div className="app-loading">
+        <div className="spinner-large"></div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <Login onLogin={() => {}} />
+  }
 
   // Carrega conversas iniciais
   useEffect(() => {
