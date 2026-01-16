@@ -40,11 +40,11 @@
 .stock-nav {
   width: 100%;
   background: var(--bg-tertiary);
-  padding: 16px 24px;
+  padding: 10px 20px;
   border-bottom: 1px solid var(--bg-hover);
   flex-shrink: 0;
   display: flex;
-  gap: 12px;
+  gap: 8px;
 }
 
 .analytics-view,
@@ -60,13 +60,13 @@
 .back-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 6px;
+  padding: 6px 12px;
   background: var(--bg-hover);
   border: none;
   border-radius: 6px;
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -79,18 +79,20 @@
 
 .back-button svg {
   flex-shrink: 0;
+  width: 18px;
+  height: 18px;
 }
 
 .nav-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 6px;
+  padding: 6px 12px;
   background: var(--bg-secondary);
   border: 1px solid var(--bg-hover);
   border-radius: 6px;
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -103,6 +105,8 @@
 
 .nav-button svg {
   flex-shrink: 0;
+  width: 18px;
+  height: 18px;
 }
 
 /* Responsividade Mobile */
