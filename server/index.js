@@ -50,6 +50,28 @@ app.use((req, res, next) => {
   next();
 });
 
+// Função helper para enviar webhooks de forma assíncrona (fire-and-forget)
+const sendWebhookAsync = (url, payload) => {
+  if (!url) return;
+
+  // Executa em background sem bloquear
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('✅ Webhook enviado com sucesso:', url);
+      } else {
+        console.error('❌ Webhook falhou:', response.status);
+      }
+    })
+    .catch(error => {
+      console.error('❌ Erro ao enviar webhook:', error.message);
+    });
+};
+
 // Conecta ao banco de dados
 let useDatabase = false;
 const conversations = new Map(); // Fallback para memória
@@ -192,37 +214,16 @@ app.post('/api/webhook/product', async (req, res) => {
     // Usa a mesma URL do webhook de status de lead ou a URL padrão do n8n
     const PRODUCT_WEBHOOK_URL = process.env.PRODUCT_WEBHOOK_URL || process.env.LEAD_STATUS_WEBHOOK_URL || process.env.N8N_WEBHOOK_URL;
 
+    // Envia webhook de forma assíncrona (não bloqueia resposta)
     if (PRODUCT_WEBHOOK_URL) {
-      try {
-        const webhookPayload = {
-          event,
-          product,
-          timestamp: timestamp || new Date().toISOString()
-        };
+      const webhookPayload = {
+        event,
+        product,
+        timestamp: timestamp || new Date().toISOString()
+      };
 
-        console.log('📤 Enviando webhook de produto para n8n:', PRODUCT_WEBHOOK_URL);
-        console.log('📦 Payload:', JSON.stringify(webhookPayload, null, 2));
-
-        const webhookResponse = await fetch(PRODUCT_WEBHOOK_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(webhookPayload)
-        });
-
-        const responseText = await webhookResponse.text();
-        console.log('📥 Resposta do webhook:', webhookResponse.status, responseText);
-
-        if (webhookResponse.ok) {
-          console.log('✅ Webhook de produto enviado com sucesso para n8n');
-        } else {
-          console.error('❌ Erro ao enviar webhook de produto:', webhookResponse.status, responseText);
-        }
-      } catch (error) {
-        console.error('❌ Erro ao enviar webhook de produto para n8n:', error.message);
-        // Não falha a requisição se o webhook falhar
-      }
+      console.log('📤 Agendando webhook de produto para n8n:', PRODUCT_WEBHOOK_URL);
+      sendWebhookAsync(PRODUCT_WEBHOOK_URL, webhookPayload);
     } else {
       console.log('⚠️  Nenhuma URL de webhook configurada para produtos');
     }

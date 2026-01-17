@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
-import { format, isToday, isYesterday } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
+import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
+import { API_URL } from '../config/api'
+import { formatMessageTime, formatFileSize } from '../utils/dateFormatters'
 import AudioRecorder from './AudioRecorder'
 import FileUploader from './FileUploader'
 import QuickMessagesBar from './QuickMessagesBar'
@@ -9,12 +9,6 @@ import SignatureManager from './SignatureManager'
 import CustomAudioPlayer from './CustomAudioPlayer'
 import './ChatWindow.css'
 import './FileUploader.css'
-
-const API_URL = import.meta.env.VITE_API_URL || (
-  import.meta.env.MODE === 'production'
-    ? window.location.origin
-    : 'http://localhost:3001'
-);
 
 function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, conversations, onSelectConversation }) {
   const [message, setMessage] = useState('')
@@ -102,7 +96,9 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, c
     return () => container.removeEventListener('scroll', handleScroll)
   }, [conversation?.hasMore, conversation?.userId, isLoadingMore, onLoadMoreMessages])
 
-  const fetchTravaStatus = async () => {
+  const fetchTravaStatus = useCallback(async () => {
+    if (!conversation?.userId) return
+
     try {
       const response = await fetch(`${API_URL}/api/leads/${conversation.userId}/trava`)
       const data = await response.json()
@@ -110,10 +106,10 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, c
     } catch (error) {
       console.error('Erro ao buscar status de trava:', error)
     }
-  }
+  }, [conversation?.userId])
 
-  const toggleTrava = async () => {
-    if (isTogglingTrava) return
+  const toggleTrava = useCallback(async () => {
+    if (isTogglingTrava || !conversation?.userId) return
 
     setIsTogglingTrava(true)
     try {
@@ -131,45 +127,25 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, c
     } finally {
       setIsTogglingTrava(false)
     }
-  }
+  }, [isTogglingTrava, conversation?.userId])
 
-  const formatMessageTime = (timestamp) => {
-    const date = new Date(timestamp)
-
-    if (isToday(date)) {
-      return format(date, 'HH:mm')
-    } else if (isYesterday(date)) {
-      return `Ontem às ${format(date, 'HH:mm')}`
-    } else {
-      return format(date, "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
-    }
-  }
-
-  const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
-  }
-
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault()
     if (message.trim()) {
       onSendMessage({ type: 'text', content: message })
       setMessage('')
     }
-  }
+  }, [message, onSendMessage])
 
-  const handleSendAudio = (audioData, duration) => {
+  const handleSendAudio = useCallback((audioData, duration) => {
     onSendMessage({
       type: 'audio',
       content: audioData,
       duration
     })
-  }
+  }, [onSendMessage])
 
-  const handleSendFile = (fileData) => {
+  const handleSendFile = useCallback((fileData) => {
     onSendMessage({
       type: 'file',
       content: fileData.fileData,
@@ -178,7 +154,7 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, c
       fileType: fileData.fileType,
       fileCategory: fileData.type
     })
-  }
+  }, [onSendMessage])
 
   if (!conversation) {
     return (
@@ -417,4 +393,4 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, c
   )
 }
 
-export default ChatWindow
+export default memo(ChatWindow)
