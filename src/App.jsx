@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, lazy, Suspense } from 'react'
 import { useAuth } from './contexts/AuthContext'
 import { API_URL } from './config/api'
 import { useSocket } from './hooks/useSocket'
+import { preloadComponents } from './utils/preloadComponents'
 import Login from './components/Login'
 import Sidebar from './components/Sidebar'
 import MobileNav from './components/MobileNav'
@@ -9,10 +10,14 @@ import ChatWindow from './components/ChatWindow'
 import NewConversationModal from './components/NewConversationModal'
 import './App.css'
 
-// Lazy loading de componentes pesados
-const KanbanBoard = lazy(() => import('./components/KanbanBoard'))
-const Analytics = lazy(() => import('./components/Analytics'))
-const ProductStock = lazy(() => import('./components/ProductStock'))
+// Lazy loading de componentes pesados com preload
+const kanbanLoader = () => import('./components/KanbanBoard')
+const analyticsLoader = () => import('./components/Analytics')
+const stockLoader = () => import('./components/ProductStock')
+
+const KanbanBoard = lazy(kanbanLoader)
+const Analytics = lazy(analyticsLoader)
+const ProductStock = lazy(stockLoader)
 
 // Loading component para Suspense
 const LoadingFallback = () => (
@@ -85,6 +90,17 @@ function App() {
       off('message', handleMessage)
     }
   }, [user, socket, on, off, fetchConversations, handleInit, handleMessage])
+
+  // Preload de componentes lazy quando usuário está autenticado
+  useEffect(() => {
+    if (user) {
+      preloadComponents([
+        { loader: kanbanLoader, name: 'KanbanBoard' },
+        { loader: analyticsLoader, name: 'Analytics' },
+        { loader: stockLoader, name: 'ProductStock' }
+      ])
+    }
+  }, [user])
 
   const handleSelectConversation = useCallback(async (conversation) => {
     try {

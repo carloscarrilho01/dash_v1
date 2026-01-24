@@ -38,14 +38,25 @@ export default defineConfig({
         }
       }
     },
-    // Otimizações adicionais
+    // Otimizações de performance
+    target: 'esnext',
     chunkSizeWarningLimit: 1000,
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, // Remove console.log em produção
-        drop_debugger: true
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info']
       }
-    }
+    },
+    // Otimizações para carregamento mais rápido
+    cssCodeSplit: true,
+    reportCompressedSize: false,
+    sourcemap: false
+  },
+  // Otimizar dependências
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'socket.io-client'],
+    exclude: []
   }
 })
