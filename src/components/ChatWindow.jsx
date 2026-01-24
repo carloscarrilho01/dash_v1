@@ -327,7 +327,15 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, c
           {conversation.messages.map((msg) => {
             // Debug: log mensagem para verificar tipo
             if (msg.type && msg.type !== 'text') {
-              console.log('🔍 Renderizando mensagem:', { type: msg.type, hasAudioUrl: !!msg.audioUrl, hasFileUrl: !!msg.fileUrl, fileCategory: msg.fileCategory });
+              console.group('🔍 Renderizando mensagem ' + msg.type);
+              console.log('Tipo:', msg.type);
+              console.log('fileCategory:', msg.fileCategory);
+              console.log('fileUrl:', msg.fileUrl ? 'EXISTE (length: ' + msg.fileUrl?.length + ')' : 'NÃO EXISTE');
+              console.log('text:', msg.text ? 'EXISTE (length: ' + msg.text?.length + ')' : 'NÃO EXISTE');
+              console.log('audioUrl:', msg.audioUrl ? 'EXISTE' : 'NÃO EXISTE');
+              console.log('fileName:', msg.fileName);
+              console.log('Mensagem completa:', JSON.stringify(msg).substring(0, 200));
+              console.groupEnd();
             }
 
             return (
