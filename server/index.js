@@ -29,7 +29,9 @@ const io = new Server(httpServer, {
     origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true
-  }
+  },
+  // Aumenta limite de mensagens para suportar áudio/imagem em base64
+  maxHttpBufferSize: 50 * 1024 * 1024 // 50MB (padrão é 1MB)
 });
 
 // Middleware
