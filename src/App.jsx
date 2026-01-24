@@ -12,7 +12,6 @@ import './App.css'
 // Lazy loading de componentes pesados
 const KanbanBoard = lazy(() => import('./components/KanbanBoard'))
 const Analytics = lazy(() => import('./components/Analytics'))
-const WhatsAppConnection = lazy(() => import('./components/WhatsAppConnection'))
 const ProductStock = lazy(() => import('./components/ProductStock'))
 
 // Loading component para Suspense
@@ -310,9 +309,6 @@ function App() {
               Analytics
             </button>
           </div>
-          <Suspense fallback={<LoadingFallback />}>
-            <WhatsAppConnection socket={socket} />
-          </Suspense>
         </div>
       ) : (
         <div className="stock-view">
