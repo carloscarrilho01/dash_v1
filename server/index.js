@@ -127,6 +127,81 @@ async function saveConversation(userId, data) {
   }
 }
 
+// Helper: Detectar tipo de mensagem baseado no conteúdo
+function detectMessageType(message) {
+  // Verifica se é base64
+  if (typeof message !== 'string') {
+    return { type: 'text', data: {} };
+  }
+
+  // Detecta áudio (data:audio/...)
+  const audioMatch = message.match(/^data:audio\/([^;]+);base64,/);
+  if (audioMatch) {
+    return {
+      type: 'audio',
+      data: {
+        audioUrl: message,
+        fileType: `audio/${audioMatch[1]}`
+      }
+    };
+  }
+
+  // Detecta imagem (data:image/...)
+  const imageMatch = message.match(/^data:image\/([^;]+);base64,/);
+  if (imageMatch) {
+    const base64Data = message.split(',')[1];
+    const estimatedSize = Math.ceil((base64Data.length * 3) / 4);
+
+    return {
+      type: 'file',
+      data: {
+        fileUrl: message,
+        fileType: `image/${imageMatch[1]}`,
+        fileCategory: 'image',
+        fileName: `imagem.${imageMatch[1]}`,
+        fileSize: estimatedSize
+      }
+    };
+  }
+
+  // Detecta outros arquivos (data:application/...)
+  const fileMatch = message.match(/^data:([^;]+);base64,/);
+  if (fileMatch) {
+    const mimeType = fileMatch[1];
+    const base64Data = message.split(',')[1];
+    const estimatedSize = Math.ceil((base64Data.length * 3) / 4);
+
+    // Determina a categoria do arquivo
+    let fileCategory = 'document';
+    let extension = 'bin';
+
+    if (mimeType.includes('pdf')) {
+      fileCategory = 'pdf';
+      extension = 'pdf';
+    } else if (mimeType.includes('word') || mimeType.includes('document')) {
+      fileCategory = 'document';
+      extension = 'docx';
+    } else if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) {
+      fileCategory = 'document';
+      extension = 'xlsx';
+    }
+
+    return {
+      type: 'file',
+      data: {
+        fileUrl: message,
+        fileType: mimeType,
+        fileCategory,
+        fileName: `arquivo.${extension}`,
+        fileSize: estimatedSize
+      }
+    };
+  }
+
+  // Mensagem de texto comum
+  return { type: 'text', data: {} };
+}
+
 // Helper: Buscar conversa (DB ou memória)
 async function getConversation(userId) {
   if (useDatabase) {
@@ -204,15 +279,36 @@ app.post('/api/webhook/message', webhookLimiter, async (req, res) => {
       };
     }
 
-    // Adiciona a mensagem
+    // Detecta o tipo de mensagem automaticamente
+    const messageInfo = detectMessageType(message);
+
+    // Log para debug de tipos de mensagem
+    if (messageInfo.type === 'audio') {
+      console.log(`🎤 Áudio detectado para ${userId} - Tipo: ${messageInfo.data.fileType}`);
+    } else if (messageInfo.type === 'file') {
+      console.log(`📎 Arquivo detectado para ${userId} - Categoria: ${messageInfo.data.fileCategory}, Tipo: ${messageInfo.data.fileType}`);
+    }
+
+    // Adiciona a mensagem com os campos apropriados
     const newMessage = {
       text: message,
+      type: messageInfo.type,
+      ...messageInfo.data,
       isBot: isBot !== undefined ? isBot : true,
       timestamp: timestamp || new Date().toISOString()
     };
 
     conversation.messages.push(newMessage);
-    conversation.lastMessage = message;
+
+    // Define a mensagem de preview baseado no tipo
+    if (messageInfo.type === 'audio') {
+      conversation.lastMessage = '🎤 Áudio';
+    } else if (messageInfo.type === 'file') {
+      conversation.lastMessage = `📎 ${messageInfo.data.fileName || 'Arquivo'}`;
+    } else {
+      conversation.lastMessage = message;
+    }
+
     conversation.lastTimestamp = newMessage.timestamp;
 
     if (!isBot) {
