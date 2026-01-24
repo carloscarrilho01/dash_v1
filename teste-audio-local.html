@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de Áudio Base64</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .test-section {
+      background: #2a2a2a;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .error {
+      color: #ff5555;
+      background: #2a1a1a;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .success {
+      color: #50fa7b;
+      background: #1a2a1a;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    audio {
+      width: 100%;
+      margin: 10px 0;
+    }
+    pre {
+      background: #333;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎵 Teste de Reprodução de Áudio Base64</h1>
+
+  <div class="test-section">
+    <h2>Teste 1: Áudio WebM Curto (Teste)</h2>
+    <p>Áudio de teste em formato WebM</p>
+    <audio id="audio1" controls></audio>
+    <button onclick="testAudio1()">▶️ Testar Áudio WebM</button>
+    <div id="result1"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Teste 2: Verificar Base64 do WhatsApp</h2>
+    <p>Cole aqui o base64 que está vindo do n8n/WhatsApp:</p>
+    <textarea id="customBase64" rows="4" style="width: 100%; background: #333; color: #fff; padding: 10px; border-radius: 4px; border: 1px solid #555;"></textarea>
+    <button onclick="testCustomAudio()">▶️ Testar Áudio Customizado</button>
+    <audio id="audioCustom" controls></audio>
+    <div id="resultCustom"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Informações de Debug</h2>
+    <div id="debugInfo"></div>
+  </div>
+
+  <script>
+    // Áudio de teste WebM (muito curto, apenas para testar)
+    const testAudioWebM = 'data:audio/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQRChYECGFOAZwH/////////FUmpZpkq17GDD0JATYCGQ2hyb21lV0GGQ2hyb21lFlSua7+uvdeBAXPFh1WVwdYCvggECGRuAacBAAAAAAACVhJO';
+
+    function testAudio1() {
+      const audio = document.getElementById('audio1');
+      const result = document.getElementById('result1');
+
+      result.innerHTML = '<div class="success">⏳ Carregando áudio...</div>';
+
+      audio.src = testAudioWebM;
+
+      audio.addEventListener('loadedmetadata', () => {
+        result.innerHTML = `<div class="success">✅ Áudio carregado com sucesso!<br>Duração: ${audio.duration.toFixed(2)}s</div>`;
+      });
+
+      audio.addEventListener('error', (e) => {
+        result.innerHTML = `<div class="error">❌ Erro ao carregar áudio:<br>${e.target.error?.message || 'Erro desconhecido'}</div>`;
+      });
+
+      audio.play().then(() => {
+        result.innerHTML += '<div class="success">▶️ Reproduzindo...</div>';
+      }).catch(err => {
+        result.innerHTML += `<div class="error">❌ Erro ao reproduzir:<br>${err.message}</div>`;
+      });
+    }
+
+    function testCustomAudio() {
+      const base64Input = document.getElementById('customBase64').value.trim();
+      const audio = document.getElementById('audioCustom');
+      const result = document.getElementById('resultCustom');
+      const debugInfo = document.getElementById('debugInfo');
+
+      if (!base64Input) {
+        result.innerHTML = '<div class="error">❌ Cole o base64 primeiro!</div>';
+        return;
+      }
+
+      result.innerHTML = '<div class="success">⏳ Processando base64...</div>';
+
+      // Verifica se tem o prefixo correto
+      let audioSrc = base64Input;
+
+      const hasPrefix = base64Input.startsWith('data:');
+
+      debugInfo.innerHTML = `
+        <pre>
+🔍 ANÁLISE DO BASE64:
+
+Tamanho total: ${base64Input.length} caracteres
+Tem prefixo 'data:': ${hasPrefix ? '✅ Sim' : '❌ NÃO'}
+Primeiros 100 chars: ${base64Input.substring(0, 100)}...
+
+${!hasPrefix ? '⚠️ AVISO: Base64 sem prefixo! Tentando adicionar automaticamente...' : ''}
+        </pre>
+      `;
+
+      // Se não tem prefixo, tenta adicionar
+      if (!hasPrefix) {
+        // Tenta detectar o tipo pelo conteúdo
+        if (base64Input.startsWith('GkXfo')) {
+          audioSrc = 'data:audio/webm;base64,' + base64Input;
+          debugInfo.innerHTML += '<div class="success">✅ Detectado como WebM, adicionando prefixo</div>';
+        } else if (base64Input.startsWith('//')) {
+          audioSrc = 'data:audio/mpeg;base64,' + base64Input;
+          debugInfo.innerHTML += '<div class="success">✅ Detectado como MP3, adicionando prefixo</div>';
+        } else {
+          audioSrc = 'data:audio/ogg;base64,' + base64Input;
+          debugInfo.innerHTML += '<div class="success">⚠️ Tipo desconhecido, tentando OGG</div>';
+        }
+      }
+
+      audio.src = audioSrc;
+
+      audio.addEventListener('loadedmetadata', () => {
+        result.innerHTML = `<div class="success">✅ Áudio carregado com sucesso!<br>Duração: ${audio.duration.toFixed(2)}s<br>Tipo detectado: ${audioSrc.match(/data:([^;]+);/)?.[1] || 'desconhecido'}</div>`;
+      });
+
+      audio.addEventListener('error', (e) => {
+        const errorCode = e.target.error?.code;
+        const errorMessages = {
+          1: 'MEDIA_ERR_ABORTED - Download foi abortado',
+          2: 'MEDIA_ERR_NETWORK - Erro de rede',
+          3: 'MEDIA_ERR_DECODE - Erro ao decodificar (formato inválido)',
+          4: 'MEDIA_ERR_SRC_NOT_SUPPORTED - Formato não suportado'
+        };
+
+        result.innerHTML = `<div class="error">❌ Erro ao carregar áudio:<br>Código: ${errorCode}<br>${errorMessages[errorCode] || 'Erro desconhecido'}</div>`;
+
+        debugInfo.innerHTML += `
+          <pre class="error">
+❌ ERRO DETECTADO:
+Código: ${errorCode}
+Mensagem: ${errorMessages[errorCode]}
+
+POSSÍVEIS CAUSAS:
+${errorCode === 3 ? '- Base64 corrompido ou incompleto\n- Formato de áudio não compatível com WebM/OGG/MP3' : ''}
+${errorCode === 4 ? '- Navegador não suporta o formato\n- MIME type incorreto\n- Base64 sem prefixo correto' : ''}
+
+SOLUÇÃO:
+- Verifique se o base64 começa com "data:audio/[tipo];base64,"
+- Teste com formato MP3 se WebM não funcionar
+- Verifique se o áudio original está corrompido
+          </pre>
+        `;
+      });
+
+      audio.play().then(() => {
+        result.innerHTML += '<div class="success">▶️ Reproduzindo...</div>';
+      }).catch(err => {
+        result.innerHTML += `<div class="error">❌ Erro ao reproduzir:<br>${err.name}: ${err.message}</div>`;
+
+        if (err.name === 'NotAllowedError') {
+          result.innerHTML += '<div class="error">⚠️ O navegador bloqueou a reprodução automática. Clique no botão play do player.</div>';
+        }
+      });
+    }
+
+    // Adiciona info do navegador
+    document.getElementById('debugInfo').innerHTML = `
+      <pre>
+🌐 INFORMAÇÕES DO NAVEGADOR:
+
+User Agent: ${navigator.userAgent}
+
+Formatos Suportados:
+${navigator.mediaDevices ? '✅' : '❌'} MediaDevices API
+${HTMLAudioElement.prototype.canPlayType('audio/webm') ? '✅' : '❌'} WebM: ${HTMLAudioElement.prototype.canPlayType('audio/webm')}
+${HTMLAudioElement.prototype.canPlayType('audio/mpeg') ? '✅' : '❌'} MP3: ${HTMLAudioElement.prototype.canPlayType('audio/mpeg')}
+${HTMLAudioElement.prototype.canPlayType('audio/ogg') ? '✅' : '❌'} OGG: ${HTMLAudioElement.prototype.canPlayType('audio/ogg')}
+      </pre>
+    `;
+  </script>
+</body>
+</html>

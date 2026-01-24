@@ -14,6 +14,7 @@ function CustomAudioPlayer({ src, duration }) {
     const handleLoadedMetadata = () => {
       setTotalDuration(audio.duration);
       setIsLoading(false);
+      console.log('🎵 Áudio carregado - Duração:', audio.duration);
     };
 
     const handleTimeUpdate = () => {
@@ -29,29 +30,50 @@ function CustomAudioPlayer({ src, duration }) {
       setIsLoading(false);
     };
 
+    const handleError = (e) => {
+      console.error('❌ Erro ao carregar áudio:', e);
+      console.error('Src:', audio.src?.substring(0, 100) + '...');
+      setIsLoading(false);
+    };
+
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('error', handleError);
     };
   }, []);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = async () => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
+    try {
+      if (isPlaying) {
+        audio.pause();
+        setIsPlaying(false);
+      } else {
+        console.log('▶️ Tentando reproduzir áudio...');
+        await audio.play();
+        setIsPlaying(true);
+        console.log('✅ Áudio reproduzindo');
+      }
+    } catch (error) {
+      console.error('❌ Erro ao reproduzir áudio:', error);
+      console.error('Tipo de erro:', error.name);
+      console.error('Mensagem:', error.message);
+      setIsPlaying(false);
+
+      // Mostra alerta para o usuário
+      alert('Não foi possível reproduzir o áudio. Verifique o formato ou o console para mais detalhes.');
     }
-    setIsPlaying(!isPlaying);
   };
 
   const handleProgressClick = (e) => {
