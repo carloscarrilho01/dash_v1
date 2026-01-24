@@ -58,6 +58,11 @@
 }
 
 .back-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   padding: 10px;
   background: var(--bg-hover);
   border: none;
@@ -67,7 +72,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 80px;
-  min-height: 80px;
+  min-height: 70px;
 }
 
 .back-button:hover {
@@ -78,11 +83,17 @@
 }
 
 .back-button svg {
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
 }
 
 .nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
   padding: 10px;
   background: var(--bg-secondary);
   border: 1px solid var(--bg-hover);
@@ -92,7 +103,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 80px;
-  min-height: 80px;
+  min-height: 70px;
 }
 
 .nav-button:hover {
@@ -104,6 +115,7 @@
 }
 
 .nav-button svg {
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
 }
