@@ -46,7 +46,7 @@
 .stat-card:hover {
   border-color: var(--accent-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
 .stat-icon {
@@ -60,23 +60,23 @@
 }
 
 .stat-icon.blue {
-  background: rgba(13, 202, 240, 0.1);
-  color: #0dcaf0;
+  background: var(--color-cyan-bg);
+  color: var(--color-cyan);
 }
 
 .stat-icon.yellow {
-  background: rgba(255, 193, 7, 0.1);
-  color: #ffc107;
+  background: var(--color-yellow-bg);
+  color: var(--color-yellow);
 }
 
 .stat-icon.green {
-  background: rgba(25, 135, 84, 0.1);
-  color: #198754;
+  background: var(--color-green-bg);
+  color: var(--color-green);
 }
 
 .stat-icon.red {
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
+  background: var(--color-red-bg);
+  color: var(--color-red);
 }
 
 .stat-content {
@@ -117,7 +117,7 @@
 .add-lead-button:hover {
   background: var(--text-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
 .add-lead-button:active {
@@ -202,7 +202,7 @@
 
 .lead-card:hover {
   border-color: var(--accent-primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--shadow-light);
   transform: translateY(-2px);
 }
 
@@ -236,8 +236,8 @@
 }
 
 .lead-badge.paused {
-  background: rgba(220, 53, 69, 0.1);
-  color: #dc3545;
+  background: var(--color-red-bg);
+  color: var(--color-red);
 }
 
 .lead-phone,

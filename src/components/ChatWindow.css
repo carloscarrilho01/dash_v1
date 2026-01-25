@@ -74,7 +74,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--bg-secondary);
   flex-shrink: 0;
 }
 
@@ -117,12 +117,12 @@
 }
 
 .trava-button.travado {
-  background: #dc3545;
+  background: var(--color-red);
   animation: pulse 2s infinite;
 }
 
 .trava-button.travado:hover:not(:disabled) {
-  background: #c82333;
+  background: var(--color-red-dark);
 }
 
 .trava-button:disabled {
@@ -132,10 +132,10 @@
 
 @keyframes pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    box-shadow: 0 0 0 0 var(--color-red-border);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
+    box-shadow: 0 0 0 8px transparent;
   }
 }
 
@@ -487,7 +487,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: var(--overlay-bg);
   z-index: 9999;
   backdrop-filter: blur(4px);
 }
@@ -585,15 +585,15 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3a3a3a, #505050);
+  background: linear-gradient(135deg, var(--avatar-gradient-start), var(--avatar-gradient-end));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--bg-secondary);
   font-weight: 600;
   font-size: 20px;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px var(--shadow-light);
 }
 
 .mobile-conversation-info {

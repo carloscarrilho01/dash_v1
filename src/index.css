@@ -29,11 +29,144 @@
   /* Bordas e sombras */
   --border-color: #2a2a2a;
   --shadow: rgba(0, 0, 0, 0.5);
+  --shadow-light: rgba(0, 0, 0, 0.3);
 
   /* Cores de status */
   --success: #4ade80;
   --error: #ef4444;
   --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* Cores semânticas para componentes */
+  --color-green: #2ecc71;
+  --color-green-dark: #27ae60;
+  --color-green-bg: rgba(46, 204, 113, 0.15);
+  --color-green-border: rgba(46, 204, 113, 0.3);
+
+  --color-purple: #9b59b6;
+  --color-purple-dark: #8e44ad;
+  --color-purple-bg: rgba(155, 89, 182, 0.15);
+  --color-purple-border: rgba(155, 89, 182, 0.3);
+
+  --color-red: #e74c3c;
+  --color-red-dark: #c0392b;
+  --color-red-bg: rgba(231, 76, 60, 0.15);
+  --color-red-border: rgba(231, 76, 60, 0.3);
+
+  --color-blue: #3498db;
+  --color-blue-dark: #2980b9;
+  --color-blue-bg: rgba(52, 152, 219, 0.15);
+  --color-blue-border: rgba(52, 152, 219, 0.3);
+
+  --color-orange: #f39c12;
+  --color-orange-dark: #e67e22;
+  --color-orange-bg: rgba(243, 156, 18, 0.15);
+  --color-orange-border: rgba(243, 156, 18, 0.3);
+
+  --color-cyan: #0dcaf0;
+  --color-cyan-bg: rgba(13, 202, 240, 0.1);
+
+  --color-yellow: #ffc107;
+  --color-yellow-bg: rgba(255, 193, 7, 0.1);
+
+  /* Avatar gradient */
+  --avatar-gradient-start: #3a3a3a;
+  --avatar-gradient-end: #505050;
+
+  /* Transparências para overlays */
+  --overlay-bg: rgba(0, 0, 0, 0.7);
+  --overlay-light: rgba(0, 0, 0, 0.5);
+
+  /* Filtros e efeitos */
+  --filter-white: rgba(255, 255, 255, 0.1);
+  --filter-white-hover: rgba(255, 255, 255, 0.15);
+  --filter-white-border: rgba(255, 255, 255, 0.2);
+  --filter-white-text: rgba(255, 255, 255, 0.7);
+  --filter-white-muted: rgba(255, 255, 255, 0.6);
+}
+
+/* ===============================
+   TEMA CLARO
+   =============================== */
+:root.light-theme {
+  /* Cores principais - Tema claro */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f0f0f0;
+  --bg-hover: #e5e5e5;
+
+  /* Cores de destaque - Tons escuros para contraste */
+  --accent-primary: #333333;
+  --accent-hover: #1a1a1a;
+  --accent-active: #555555;
+
+  /* Cores de texto */
+  --text-primary: #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+
+  /* Cores de mensagens */
+  --msg-in-bg: #e8e8e8;
+  --msg-out-bg: #d5d5d5;
+  --msg-agent-bg: #dedede;
+
+  /* Bordas e sombras */
+  --border-color: #d0d0d0;
+  --shadow: rgba(0, 0, 0, 0.15);
+  --shadow-light: rgba(0, 0, 0, 0.1);
+
+  /* Cores de status - mais vibrantes para tema claro */
+  --success: #22c55e;
+  --error: #dc2626;
+  --warning: #d97706;
+  --info: #2563eb;
+
+  /* Cores semânticas para componentes */
+  --color-green: #16a34a;
+  --color-green-dark: #15803d;
+  --color-green-bg: rgba(22, 163, 74, 0.12);
+  --color-green-border: rgba(22, 163, 74, 0.25);
+
+  --color-purple: #9333ea;
+  --color-purple-dark: #7e22ce;
+  --color-purple-bg: rgba(147, 51, 234, 0.12);
+  --color-purple-border: rgba(147, 51, 234, 0.25);
+
+  --color-red: #dc2626;
+  --color-red-dark: #b91c1c;
+  --color-red-bg: rgba(220, 38, 38, 0.12);
+  --color-red-border: rgba(220, 38, 38, 0.25);
+
+  --color-blue: #2563eb;
+  --color-blue-dark: #1d4ed8;
+  --color-blue-bg: rgba(37, 99, 235, 0.12);
+  --color-blue-border: rgba(37, 99, 235, 0.25);
+
+  --color-orange: #ea580c;
+  --color-orange-dark: #c2410c;
+  --color-orange-bg: rgba(234, 88, 12, 0.12);
+  --color-orange-border: rgba(234, 88, 12, 0.25);
+
+  --color-cyan: #0891b2;
+  --color-cyan-bg: rgba(8, 145, 178, 0.1);
+
+  --color-yellow: #ca8a04;
+  --color-yellow-bg: rgba(202, 138, 4, 0.1);
+
+  /* Avatar gradient */
+  --avatar-gradient-start: #a0a0a0;
+  --avatar-gradient-end: #c0c0c0;
+
+  /* Transparências para overlays */
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --overlay-light: rgba(0, 0, 0, 0.3);
+
+  /* Filtros e efeitos */
+  --filter-white: rgba(0, 0, 0, 0.05);
+  --filter-white-hover: rgba(0, 0, 0, 0.08);
+  --filter-white-border: rgba(0, 0, 0, 0.1);
+  --filter-white-text: rgba(0, 0, 0, 0.7);
+  --filter-white-muted: rgba(0, 0, 0, 0.5);
 }
 
 body {

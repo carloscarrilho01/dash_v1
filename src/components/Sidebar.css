@@ -86,6 +86,16 @@
   color: var(--accent-primary);
 }
 
+.theme-toggle-btn {
+  background: transparent;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--color-orange-bg);
+  color: var(--color-orange);
+  border-color: var(--color-orange-border);
+}
+
 .new-conversation-btn {
   background: var(--accent-primary);
   color: var(--bg-primary);
@@ -98,8 +108,8 @@
 }
 
 .logout-btn:hover {
-  background: rgba(231, 76, 60, 0.1);
-  color: #e74c3c;
+  background: var(--color-red-bg);
+  color: var(--color-red);
 }
 
 .sidebar-search {
@@ -210,13 +220,13 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3a3a3a, #505050);
+  background: linear-gradient(135deg, var(--avatar-gradient-start), var(--avatar-gradient-end));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--bg-secondary);
   font-weight: 500;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px var(--shadow);
 }
 
 .conversation-info {

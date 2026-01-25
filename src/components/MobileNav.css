@@ -387,13 +387,22 @@
   flex-shrink: 0;
 }
 
+.menu-item.theme-item {
+  color: var(--color-orange);
+}
+
+.menu-item.theme-item:hover {
+  background: var(--color-orange-bg);
+  color: var(--color-orange);
+}
+
 .menu-item.logout-item {
-  color: #e74c3c;
+  color: var(--color-red);
 }
 
 .menu-item.logout-item:hover {
-  background: rgba(231, 76, 60, 0.1);
-  color: #e74c3c;
+  background: var(--color-red-bg);
+  color: var(--color-red);
 }
 
 /* Footer do Menu - usuário */

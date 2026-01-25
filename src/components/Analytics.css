@@ -16,7 +16,7 @@
 .analytics-header h1 {
   font-size: 28px;
   font-weight: 300;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -27,23 +27,24 @@
 
 .filter-button {
   padding: 8px 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--filter-white);
+  border: 1px solid var(--filter-white-border);
   border-radius: 6px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .filter-button:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: var(--filter-white-hover);
+  border-color: var(--filter-white-border);
 }
 
 .filter-button.active {
   background: var(--accent-primary);
   border-color: var(--accent-primary);
+  color: var(--bg-primary);
   font-weight: 500;
 }
 
@@ -54,7 +55,7 @@
   justify-content: center;
   min-height: 100vh;
   background: var(--bg-primary);
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .analytics-loading p {
@@ -87,50 +88,50 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.3) 100%);
+  background: linear-gradient(90deg, var(--filter-white) 0%, var(--filter-white-border) 100%);
 }
 
 .metric-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px var(--shadow-light);
   border-color: var(--accent-primary);
 }
 
 .metric-card.primary {
   grid-column: span 2;
-  background: rgba(46, 204, 113, 0.15);
-  border-color: rgba(46, 204, 113, 0.3);
+  background: var(--color-green-bg);
+  border-color: var(--color-green-border);
 }
 
 .metric-card.primary::before {
-  background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+  background: linear-gradient(90deg, var(--color-green) 0%, var(--color-green-dark) 100%);
 }
 
 .metric-card.secondary {
-  background: rgba(155, 89, 182, 0.15);
-  border-color: rgba(155, 89, 182, 0.3);
+  background: var(--color-purple-bg);
+  border-color: var(--color-purple-border);
 }
 
 .metric-card.secondary::before {
-  background: linear-gradient(90deg, #9b59b6 0%, #8e44ad 100%);
+  background: linear-gradient(90deg, var(--color-purple) 0%, var(--color-purple-dark) 100%);
 }
 
 .metric-card.tertiary {
-  background: rgba(231, 76, 60, 0.15);
-  border-color: rgba(231, 76, 60, 0.3);
+  background: var(--color-red-bg);
+  border-color: var(--color-red-border);
 }
 
 .metric-card.tertiary::before {
-  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+  background: linear-gradient(90deg, var(--color-red) 0%, var(--color-red-dark) 100%);
 }
 
 .metric-card.info {
-  background: rgba(52, 152, 219, 0.15);
-  border-color: rgba(52, 152, 219, 0.3);
+  background: var(--color-blue-bg);
+  border-color: var(--color-blue-border);
 }
 
 .metric-card.info::before {
-  background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+  background: linear-gradient(90deg, var(--color-blue) 0%, var(--color-blue-dark) 100%);
 }
 
 .metric-card.large {
@@ -151,7 +152,7 @@
 .metric-label {
   font-size: 11px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--filter-white-text);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -159,7 +160,7 @@
 .metric-value {
   font-size: 36px;
   font-weight: 300;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 4px 0;
   line-height: 1;
 }
@@ -167,7 +168,7 @@
 .metric-value-large {
   font-size: 48px;
   font-weight: 300;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 6px 0;
   line-height: 1;
 }
@@ -175,18 +176,18 @@
 .metric-value-huge {
   font-size: 64px;
   font-weight: 300;
-  color: #ffffff;
+  color: var(--text-primary);
   margin: 8px 0;
   line-height: 1;
 }
 
 .metric-value.time {
-  color: #2ecc71;
+  color: var(--color-green);
 }
 
 .metric-subtitle {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--filter-white-muted);
   margin-bottom: 8px;
 }
 
@@ -202,19 +203,19 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   padding: 6px 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--filter-white);
   border-radius: 5px;
   transition: all 0.2s ease;
 }
 
 .breakdown-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--filter-white-hover);
 }
 
 .breakdown-item svg {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--filter-white-muted);
   flex-shrink: 0;
   width: 12px;
   height: 12px;
@@ -226,7 +227,7 @@
 
 .breakdown-value {
   font-weight: 600;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 13px;
 }
 
@@ -236,7 +237,7 @@
   gap: 8px;
   margin-top: 12px;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--filter-white-muted);
 }
 
 .change-indicator {
@@ -247,13 +248,13 @@
 }
 
 .change-indicator.positive {
-  color: #2ecc71;
-  background: rgba(46, 204, 113, 0.15);
+  color: var(--color-green);
+  background: var(--color-green-bg);
 }
 
 .change-indicator.negative {
-  color: #e74c3c;
-  background: rgba(231, 76, 60, 0.15);
+  color: var(--color-red);
+  background: var(--color-red-bg);
 }
 
 .metric-progress {
@@ -263,7 +264,7 @@
 .progress-bar {
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--filter-white);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -275,19 +276,19 @@
 }
 
 .progress-fill.green {
-  background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+  background: linear-gradient(90deg, var(--color-green) 0%, var(--color-green-dark) 100%);
 }
 
 .progress-fill.blue {
-  background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+  background: linear-gradient(90deg, var(--color-blue) 0%, var(--color-blue-dark) 100%);
 }
 
 .progress-fill.red {
-  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+  background: linear-gradient(90deg, var(--color-red) 0%, var(--color-red-dark) 100%);
 }
 
 .progress-fill.orange {
-  background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+  background: linear-gradient(90deg, var(--color-orange) 0%, var(--color-orange-dark) 100%);
 }
 
 /* Circular Progress */
@@ -317,7 +318,7 @@
 .progress-phone {
   font-size: 14px;
   font-weight: 500;
-  color: #f39c12;
+  color: var(--color-orange);
 }
 
 /* Responsive */
