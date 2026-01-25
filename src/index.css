@@ -73,6 +73,30 @@
   --avatar-gradient-start: #3a3a3a;
   --avatar-gradient-end: #505050;
 
+  /* Cores para ícones de estatísticas */
+  --stat-warning: #ffc107;
+  --stat-warning-bg: rgba(255, 193, 7, 0.1);
+  --stat-danger: #f44336;
+  --stat-danger-bg: rgba(244, 67, 54, 0.1);
+  --stat-success: #4caf50;
+  --stat-success-bg: rgba(76, 175, 80, 0.1);
+
+  /* Cores para waveform/empty state */
+  --waveform-primary: #525252;
+  --waveform-secondary: #3b3b3b;
+
+  /* Cor secundária do gradiente */
+  --accent-gradient-end: #9d4edd;
+
+  /* Cores do Kanban (status) */
+  --kanban-novo: #6c757d;
+  --kanban-agendado: #0dcaf0;
+  --kanban-compareceu: #17a2b8;
+  --kanban-nao-compareceu: #fd7e14;
+  --kanban-servico-finalizado: #20c997;
+  --kanban-fechado: #198754;
+  --kanban-perdido: #dc3545;
+
   /* Transparências para overlays */
   --overlay-bg: rgba(0, 0, 0, 0.7);
   --overlay-light: rgba(0, 0, 0, 0.5);
@@ -156,6 +180,30 @@
   /* Avatar gradient */
   --avatar-gradient-start: #a0a0a0;
   --avatar-gradient-end: #c0c0c0;
+
+  /* Cores para ícones de estatísticas */
+  --stat-warning: #f59e0b;
+  --stat-warning-bg: rgba(245, 158, 11, 0.12);
+  --stat-danger: #dc2626;
+  --stat-danger-bg: rgba(220, 38, 38, 0.12);
+  --stat-success: #16a34a;
+  --stat-success-bg: rgba(22, 163, 74, 0.12);
+
+  /* Cores para waveform/empty state */
+  --waveform-primary: #9ca3af;
+  --waveform-secondary: #d1d5db;
+
+  /* Cor secundária do gradiente */
+  --accent-gradient-end: #a855f7;
+
+  /* Cores do Kanban (status) - tema claro */
+  --kanban-novo: #6c757d;
+  --kanban-agendado: #0891b2;
+  --kanban-compareceu: #0e7490;
+  --kanban-nao-compareceu: #ea580c;
+  --kanban-servico-finalizado: #059669;
+  --kanban-fechado: #16a34a;
+  --kanban-perdido: #dc2626;
 
   /* Transparências para overlays */
   --overlay-bg: rgba(0, 0, 0, 0.5);

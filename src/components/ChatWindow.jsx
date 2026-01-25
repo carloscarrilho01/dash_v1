@@ -273,8 +273,8 @@ function ChatWindow({ conversation, onSendMessage, onLoadMoreMessages, socket, c
         <div className="chat-empty">
           <div className="chat-empty-content">
             <svg viewBox="0 0 303 172" width="360" height="360" className="empty-icon">
-              <path fill="#525252" d="M229.5 0C263.4 0 291 27.6 291 61.5V110.5C291 144.4 263.4 172 229.5 172H64.5C30.6 172 3 144.4 3 110.5V61.5C3 27.6 30.6 0 64.5 0H229.5Z"/>
-              <path fill="#3b3b3b" d="M229.5 5C260.5 5 286 30.5 286 61.5V110.5C286 141.5 260.5 167 229.5 167H64.5C33.5 167 8 141.5 8 110.5V61.5C8 30.5 33.5 5 64.5 5H229.5Z"/>
+              <path fill="var(--waveform-primary)" d="M229.5 0C263.4 0 291 27.6 291 61.5V110.5C291 144.4 263.4 172 229.5 172H64.5C30.6 172 3 144.4 3 110.5V61.5C3 27.6 30.6 0 64.5 0H229.5Z"/>
+              <path fill="var(--waveform-secondary)" d="M229.5 5C260.5 5 286 30.5 286 61.5V110.5C286 141.5 260.5 167 229.5 167H64.5C33.5 167 8 141.5 8 110.5V61.5C8 30.5 33.5 5 64.5 5H229.5Z"/>
             </svg>
             <h2>IA Conversa</h2>
             <p>Selecione uma conversa para visualizar as mensagens</p>

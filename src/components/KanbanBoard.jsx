@@ -5,13 +5,13 @@ import EditLeadModal from './EditLeadModal'
 import './KanbanBoard.css'
 
 const COLUMNS = [
-  { id: 'novo', title: 'Novo', color: '#6c757d' },
-  { id: 'agendado', title: 'Agendado', color: '#0dcaf0' },
-  { id: 'compareceu', title: 'Compareceu', color: '#17a2b8' },
-  { id: 'nao_compareceu', title: 'Não compareceu', color: '#fd7e14' },
-  { id: 'servico_finalizado', title: 'Serviço finalizado', color: '#20c997' },
-  { id: 'fechado', title: 'Fechado', color: '#198754' },
-  { id: 'perdido', title: 'Perdido', color: '#dc3545' }
+  { id: 'novo', title: 'Novo', colorVar: '--kanban-novo' },
+  { id: 'agendado', title: 'Agendado', colorVar: '--kanban-agendado' },
+  { id: 'compareceu', title: 'Compareceu', colorVar: '--kanban-compareceu' },
+  { id: 'nao_compareceu', title: 'Não compareceu', colorVar: '--kanban-nao-compareceu' },
+  { id: 'servico_finalizado', title: 'Serviço finalizado', colorVar: '--kanban-servico-finalizado' },
+  { id: 'fechado', title: 'Fechado', colorVar: '--kanban-fechado' },
+  { id: 'perdido', title: 'Perdido', colorVar: '--kanban-perdido' }
 ];
 
 function KanbanBoard({ socket }) {
@@ -384,7 +384,7 @@ function KanbanBoard({ socket }) {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, column.id)}
             >
-              <div className="column-header" style={{ borderTopColor: column.color }}>
+              <div className="column-header" style={{ borderTopColor: `var(${column.colorVar})` }}>
                 <h3>{column.title}</h3>
                 <span className="column-count">{columnLeads.length}</span>
               </div>

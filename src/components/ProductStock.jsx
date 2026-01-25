@@ -267,38 +267,38 @@ function ProductStock() {
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(255, 193, 7, 0.1)' }}>
+            <div className="stat-icon" style={{ background: 'var(--stat-warning-bg)' }}>
               <svg viewBox="0 0 24 24" width="24" height="24">
-                <path fill="#ffc107" d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M11,4H6V20H11L18,20V11H11V4Z" />
+                <path fill="var(--stat-warning)" d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M11,4H6V20H11L18,20V11H11V4Z" />
               </svg>
             </div>
             <div className="stat-content">
               <span className="stat-label">Estoque Baixo</span>
-              <span className="stat-value" style={{ color: '#ffc107' }}>{stats.lowStock}</span>
+              <span className="stat-value" style={{ color: 'var(--stat-warning)' }}>{stats.lowStock}</span>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(244, 67, 54, 0.1)' }}>
+            <div className="stat-icon" style={{ background: 'var(--stat-danger-bg)' }}>
               <svg viewBox="0 0 24 24" width="24" height="24">
-                <path fill="#f44336" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+                <path fill="var(--stat-danger)" d="M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
               </svg>
             </div>
             <div className="stat-content">
               <span className="stat-label">Sem Estoque</span>
-              <span className="stat-value" style={{ color: '#f44336' }}>{stats.outOfStock}</span>
+              <span className="stat-value" style={{ color: 'var(--stat-danger)' }}>{stats.outOfStock}</span>
             </div>
           </div>
 
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: 'rgba(76, 175, 80, 0.1)' }}>
+            <div className="stat-icon" style={{ background: 'var(--stat-success-bg)' }}>
               <svg viewBox="0 0 24 24" width="24" height="24">
-                <path fill="#4caf50" d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z" />
+                <path fill="var(--stat-success)" d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z" />
               </svg>
             </div>
             <div className="stat-content">
               <span className="stat-label">Valor Total</span>
-              <span className="stat-value" style={{ color: '#4caf50' }}>
+              <span className="stat-value" style={{ color: 'var(--stat-success)' }}>
                 R$ {stats.totalValue.toFixed(2)}
               </span>
             </div>
